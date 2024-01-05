@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podcaststudio-deployment
+  labels:
+    app: podcaststudio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: podcaststudio
+  template:
+    metadata:
+      labels:
+        app: podcaststudio
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: podcaststudio
+          image: matt404/podcaststudio:IMAGE_VERSION
+          ports:
+            - containerPort: 80
+              protocol: TCP
