@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "PodCastStudio",
+  "name": "A studio for podcasters to record and edit their podcasts",
   "icons": [
     {
       "src": "favicon.ico",
@@ -21,5 +21,17 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#ffffff",
+  "permissions": [
+    "activeTab",
+    "audioCapture",
+    "identity",
+    "identity.email",
+    "identity.profile",
+    "identity.avatar",
+    "identity.basic",
+    "storage",
+    "unlimitedStorage",
+    "videoCapture"
+  ]
 }

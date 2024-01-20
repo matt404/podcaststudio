@@ -27,7 +27,7 @@ class VideoComponent extends Component {
 
   render() {
     return (
-        <div>
+        <div className="VideoDeviceSettings">
           <video ref={this.props.videoRef} autoPlay></video>
           <h5>Video Device</h5>
           <select value={this.props.selectedVideoDeviceId} onChange={this.props.handleVideoDeviceChange}>

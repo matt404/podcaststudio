@@ -1,17 +1,21 @@
+import './AVTrack.css';
+import Track from '../model/Track.js';
 import React, {Component} from 'react';
 import AudioVisualizer from "./AudioVisualizer";
 import {Table} from "react-bootstrap";
 import VideoComponent from "./VideoComponent";
 import PropTypes from "prop-types";
+import MediaFileUtil from "../util/MediaFileUtil";
 
 class AVTrack extends Component {
   static propTypes = {
     devices: PropTypes.array,
-    projectInfo: PropTypes.object,
+    project: PropTypes.object,
     recording: PropTypes.bool,
     streaming: PropTypes.bool,
-    selectedTracks: PropTypes.array,
-    setSelectedTracks: PropTypes.func,
+    saveTrackToProject: PropTypes.func,
+    selectedDeviceTracks: PropTypes.array,
+    setSelectedDeviceTracks: PropTypes.func,
     startRecording: PropTypes.func,
     stopRecording: PropTypes.func,
     startStreaming: PropTypes.func,
@@ -39,22 +43,25 @@ class AVTrack extends Component {
     this.stopRecording = this.stopRecording.bind(this);
   }
 
-  componentDidMount() {
-  }
-
   componentDidUpdate() {
     if(this.props.devices.length > 0){
       const audioDevices = this.props.devices.filter(device => device.kind === 'audioinput');
       const videoDevices = this.props.devices.filter(device => device.kind === 'videoinput');
-      if(audioDevices.length > 0 && this.state.selectedAudioDeviceId === ''){
-        this.setState({
-          selectedAudioDeviceId: audioDevices[0].deviceId
-        })
+      let devices = {
+        selectedAudioDeviceId: '',
+        selectedVideoDeviceId: '',
       }
-      if(videoDevices.length > 0 && this.state.selectedVideoDeviceId === ''){
-        this.setState({
-          selectedVideoDeviceId: videoDevices[0].deviceId
-        })
+      let updateState = false;
+      if(audioDevices.length > 0 && this.state.selectedAudioDeviceId === '' && audioDevices[0].deviceId !== ''){
+        devices.selectedAudioDeviceId = audioDevices[0].deviceId;
+        updateState = true;
+      }
+      if(videoDevices.length > 0 && this.state.selectedVideoDeviceId === '' && videoDevices[0].deviceId !== ''){
+        devices.selectedVideoDeviceId = videoDevices[0].deviceId;
+        updateState = true;
+      }
+      if(updateState){
+        this.setState(devices);
       }
     }
   }
@@ -68,6 +75,7 @@ class AVTrack extends Component {
 
   startRecording = () => {
     this.recordedChunks = [];
+    this.startTime = Date.now(); // Record the start time
 
     this.mediaRecorderRef.current = new MediaRecorder(this.videoRef.current.srcObject);
     this.mediaRecorderRef.current.ondataavailable = this.handleDataAvailable;
@@ -78,23 +86,22 @@ class AVTrack extends Component {
 
   stopRecording = () => {
     this.mediaRecorderRef.current.onstop = () => {
+
       const blob = new Blob(this.recordedChunks, { type: this.recordedMediaType });
-      const url = URL.createObjectURL(blob);
 
-      let projectName = this.props.projectInfo.projectName;
-      if(projectName === ''){
-        projectName = "PodCastStudio_Track";
-      }
+      MediaFileUtil.blobToDataUrl(blob, (dataUrl) => {
 
-      const a = document.createElement("a");
-      document.body.appendChild(a);
-      a.style = "display: none";
-      a.href = url;
-      a.download = projectName+".webm";
-      a.click();
-      window.URL.revokeObjectURL(url);
+        const endTime = Date.now(); // Record the end time
+        const duration = endTime - this.startTime; // Calculate the duration
+        const trackName = "Track " + (this.props.project.trackIds.length + 1);
 
-      this.recordedChunks = [];
+        const track = new Track(this.props.project.trackIds.length, trackName, duration, dataUrl, blob.type,
+            this.startTime, endTime);
+
+        this.props.saveTrackToProject(track);
+
+        this.recordedChunks = [];
+      });
     };
 
     this.mediaRecorderRef.current.stop();
@@ -130,7 +137,7 @@ class AVTrack extends Component {
       await navigator.mediaDevices.getUserMedia(constraints)
           .then(stream => {
             this.videoRef.current.srcObject = stream;
-            this.props.setSelectedTracks(stream.getTracks());
+            this.props.setSelectedDeviceTracks(stream.getTracks());
           });
       this.props.startStreaming();
     } catch (error) {
@@ -169,14 +176,14 @@ class AVTrack extends Component {
         <Table variant="dark">
           <tbody>
           <tr>
-            <td><VideoComponent
+            <td className="VideoCell"><VideoComponent
                 handleVideoDeviceChange={this.handleVideoDeviceChange}
                 videoDevices={this.props.devices.filter(device => device.kind === 'videoinput')}
                 selectedVideoDeviceId={this.state.selectedVideoDeviceId}
                 streaming={this.props.streaming}
                 recording={this.props.recording}
                 videoRef={this.videoRef}/></td>
-            <td><AudioVisualizer
+            <td className="AudioCell"><AudioVisualizer
                 audioDevices={this.props.devices.filter(device => device.kind === 'audioinput')}
                 videoRef={this.videoRef}
                 handleAudioDeviceChange={this.handleAudioDeviceChange}

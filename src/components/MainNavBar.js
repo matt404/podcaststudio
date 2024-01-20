@@ -7,6 +7,7 @@ class MainNavBar extends Component {
   static propTypes = {
     recording: PropTypes.bool,
     streaming: PropTypes.bool,
+    createNewProject: PropTypes.func,
   }
   constructor(props) {
     super(props);
@@ -15,6 +16,7 @@ class MainNavBar extends Component {
       activityStatusTitle: 'Stopped',
       activityStatusCSS: 'secondary',
     };
+
   }
   componentDidUpdate(prevProps, prevState, snapshot) {
     if(this.props.streaming !== prevProps.streaming || this.props.recording !== prevProps.recording){
@@ -51,11 +53,11 @@ class MainNavBar extends Component {
                   navbarScroll
               >
                 <NavDropdown title="Project" id="navbarScrollingDropdown">
-                  <NavDropdown.Item href="#action3">Todo</NavDropdown.Item>
+                  <NavDropdown.Item href="#action3" onClick={this.props.createNewProject}>New</NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item href="#action5">
-                    Todo
-                  </NavDropdown.Item>
+                  <NavDropdown.Item href="#action3">Export</NavDropdown.Item>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item href="#action3">Upload</NavDropdown.Item>
                 </NavDropdown>
               </Nav>
               <Form className="d-flex">

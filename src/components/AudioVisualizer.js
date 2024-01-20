@@ -66,7 +66,6 @@ class AudioVisualizer extends Component {
   }
 
   handleStream = (stream) => {
-    console.log("handleStream", stream);
     const source= this.audioContext.createMediaStreamSource(stream);
     source.connect(this.analyser);
     this.draw();
@@ -112,7 +111,7 @@ class AudioVisualizer extends Component {
 
   render() {
     return (
-        <div>
+        <div className="AudioDeviceSettings">
           <canvas ref={this.canvasRef} width="400" height="300"/>
           <h5>Audio Device</h5>
           <select value={this.props.selectedAudioDeviceId} onChange={this.props.handleAudioDeviceChange}>

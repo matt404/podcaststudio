@@ -1,0 +1,8 @@
+td.track-preview{
+    text-align: left;
+}
+
+td.track-preview video{
+    width: auto;
+    height: 100px;
+}

@@ -1,3 +1,4 @@
+npm run build
 
 # builds for ARMv8 using dockerx, and pushes to cloud account
 NEW_DOCKER_IMAGE_VERSION=$(date +%s)

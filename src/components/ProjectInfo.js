@@ -4,7 +4,7 @@ import {Form} from "react-bootstrap";
 
 class ProjectInfo extends Component {
   static propTypes = {
-    projectInfo: PropTypes.object,
+    project: PropTypes.object,
     setProjectInfo: PropTypes.func,
   }
   constructor(props) {
@@ -38,11 +38,15 @@ class ProjectInfo extends Component {
           <Form>
             <Form.Group className="mb-3">
               <Form.Label>Project Name</Form.Label>
-              <Form.Control id="ProjectName" type="text" onChange={this.setProjectInfo} />
+              <Form.Control id="ProjectName" type="text"
+                            defaultValue={this.props.project ? this.props.project.name : ''}
+                            onChange={this.setProjectInfo} />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Description</Form.Label>
-              <Form.Control id="ProjectDesc" as="textarea" rows={3} onChange={this.setProjectInfo} />
+              <Form.Control id="ProjectDesc" as="textarea" rows={3}
+                            defaultValue={this.props.project ? this.props.project.description : ''}
+                            onChange={this.setProjectInfo} />
             </Form.Group>
           </Form>
         </div>
