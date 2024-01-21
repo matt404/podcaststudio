@@ -1,3 +1,4 @@
+import navlogo from '../navlogo.png';
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import {Button, Container, Form, Nav, Navbar, NavDropdown} from "react-bootstrap";
@@ -8,6 +9,7 @@ class MainNavBar extends Component {
     recording: PropTypes.bool,
     streaming: PropTypes.bool,
     createNewProject: PropTypes.func,
+    exportProjectToVideoFile: PropTypes.func,
   }
   constructor(props) {
     super(props);
@@ -44,7 +46,7 @@ class MainNavBar extends Component {
         <Navbar expand="lg" className="bg-body-tertiary"
                 data-bs-theme="dark">
           <Container fluid>
-            <Navbar.Brand href="#"><FaPodcast /> PodCastStudio</Navbar.Brand>
+            <Navbar.Brand href="#"><img alt="logo" src={navlogo} /> PodCastStudio</Navbar.Brand>
             <Navbar.Toggle aria-controls="navbarScroll" />
             <Navbar.Collapse id="navbarScroll">
               <Nav
@@ -53,11 +55,11 @@ class MainNavBar extends Component {
                   navbarScroll
               >
                 <NavDropdown title="Project" id="navbarScrollingDropdown">
-                  <NavDropdown.Item href="#action3" onClick={this.props.createNewProject}>New</NavDropdown.Item>
+                  <NavDropdown.Item onClick={this.props.createNewProject}>New</NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item href="#action3">Export</NavDropdown.Item>
+                  <NavDropdown.Item onClick={this.props.exportProjectToVideoFile}>Export</NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item href="#action3">Upload</NavDropdown.Item>
+                  <NavDropdown.Item onClick={()=>{alert("Not implemented")}}>Upload</NavDropdown.Item>
                 </NavDropdown>
               </Nav>
               <Form className="d-flex">

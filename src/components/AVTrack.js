@@ -6,6 +6,7 @@ import {Table} from "react-bootstrap";
 import VideoComponent from "./VideoComponent";
 import PropTypes from "prop-types";
 import MediaFileUtil from "../util/MediaFileUtil";
+import Database from "../util/Database";
 
 class AVTrack extends Component {
   static propTypes = {
@@ -89,14 +90,15 @@ class AVTrack extends Component {
 
       const blob = new Blob(this.recordedChunks, { type: this.recordedMediaType });
 
-      MediaFileUtil.blobToDataUrl(blob, (dataUrl) => {
+      MediaFileUtil.blobToArrayBuffer(blob, (dataUrl) => {
 
         const endTime = Date.now(); // Record the end time
         const duration = endTime - this.startTime; // Calculate the duration
         const trackName = "Track " + (this.props.project.trackIds.length + 1);
+        const newId = Database.generateUUID();
 
-        const track = new Track(this.props.project.trackIds.length, trackName, duration, dataUrl, blob.type,
-            this.startTime, endTime);
+        const track = new Track(newId, trackName, duration, dataUrl, blob.type,
+            blob.size, this.startTime, endTime);
 
         this.props.saveTrackToProject(track);
 
@@ -173,7 +175,7 @@ class AVTrack extends Component {
 
   render() {
     return (
-        <Table variant="dark">
+        <Table className="AVTrack" variant="dark">
           <tbody>
           <tr>
             <td className="VideoCell"><VideoComponent

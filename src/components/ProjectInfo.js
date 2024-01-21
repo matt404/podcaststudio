@@ -20,6 +20,13 @@ class ProjectInfo extends Component {
     this.setProjectInfo = this.setProjectInfo.bind(this);
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if(prevProps.project !== this.props.project){
+      document.getElementById("ProjectName").value = this.props.project ? this.props.project.name : '';
+      document.getElementById("ProjectDesc").value = this.props.project ? this.props.project.description : '';
+    }
+  }
+
   setProjectInfo(event){
     if(this.inputTimeoutId){
       clearTimeout(this.inputTimeoutId);

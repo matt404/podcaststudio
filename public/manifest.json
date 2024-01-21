@@ -24,14 +24,11 @@
   "background_color": "#ffffff",
   "permissions": [
     "activeTab",
-    "audioCapture",
     "identity",
     "identity.email",
     "identity.profile",
     "identity.avatar",
     "identity.basic",
-    "storage",
-    "unlimitedStorage",
-    "videoCapture"
+    "storage"
   ]
 }

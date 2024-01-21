@@ -7,6 +7,11 @@ This project was created to give podcasters the necessary tools to create new au
 2) Record video and audio from any input source (current state)
 3) Compose a single media output from multiple recordings (future state)
 
+## Screenshots
+
+![Screenshot](screenshots/Screenshot1.png)
+![Screenshot](screenshots/Screenshot2.png)
+
 ## Available Scripts
 
 In the project directory, you can run:

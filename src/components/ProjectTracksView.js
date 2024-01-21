@@ -2,12 +2,16 @@ import './ProjectTracksView.css';
 import React, {Component} from 'react';
 import {Button, Table} from "react-bootstrap";
 import PropTypes from "prop-types";
-import {FaDownload} from "react-icons/fa";
+import {FaArrowDown, FaArrowUp, FaDownload, FaRegTrashAlt} from "react-icons/fa";
 import MediaFileUtil from "../util/MediaFileUtil";
 
 class ProjectTracksView extends Component {
     static propTypes = {
         project: PropTypes.object,
+        projectTracks: PropTypes.array,
+        deleteProjectTrack: PropTypes.func,
+        moveProjectTrackUp: PropTypes.func,
+        moveProjectTrackDown: PropTypes.func,
     }
     constructor(props) {
         super(props);
@@ -34,42 +38,48 @@ class ProjectTracksView extends Component {
 
     render() {
         return (
-            <Table>
+            <div className="ProjectTracks">
+            <Table striped bordered hover variant="dark">
                 <thead>
-                    <tr>
-                        <th>&nbsp;</th>
-                        <th>Track Name</th>
-                        <th>Track Duration</th>
-                        <th>Preview</th>
-                        <th>&nbsp;</th>
-                    </tr>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>Track Name</th>
+                    <th>Track Duration</th>
+                    <th>Size</th>
+                    <th>Preview</th>
+                    <th>&nbsp;</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {this.props.project && this.props.project.trackIds.map(trackId => {
-                        const trackKey = "project_"+this.props.project.id+"_track_"+trackId;
-                        const track = JSON.parse(window.localStorage.getItem(trackKey));
-                        return (
-                            <tr key={track.id}>
-                                <td><input type={"checkbox"} /></td>
-                                <td>{track.name}</td>
-                                <td>{track.duration}</td>
-                                <td className="track-preview">
-                                    <video controls>
-                                        <source src={track.blob} type={track.mediaType} />
-                                        Your browser does not support the video element.
-                                    </video>
-                                </td>
-                                <td align={"right"}><Button onClick={()=>{this.downloadProjectTrack(track)}}><FaDownload/></Button></td>
-                            </tr>
-                        );
-                    })}
+                {this.props.projectTracks && this.props.projectTracks.map((track, index) => {
+                    const blob = new Blob([track.blob], { type: track.mediaType });
+                    const url = URL.createObjectURL(blob);
+                    return (
+                        <tr key={track.id}>
+                            <td><input type={"checkbox"} name="projectTracks" value={track.id} defaultChecked={true} /></td>
+                            <td>{track.name}</td>
+                            <td>{MediaFileUtil.formatDuration(track.duration)}</td>
+                            <td>{MediaFileUtil.formatBytes(track.blobSize)}</td>
+                            <td className="track-preview">
+                                <video controls>
+                                    <source src={url} type={track.mediaType} />
+                                    Your browser does not support the video element.
+                                </video>
+                            </td>
+                            <td className="padRight" align={"right"}>
+                                <Button variant="secondary" onClick={()=>{this.props.moveProjectTrackUp(index)}}><FaArrowUp/></Button>
+                                <Button variant="secondary" className="padRight" onClick={()=>{this.props.moveProjectTrackDown(index)}}><FaArrowDown/></Button>
+                                <Button variant="secondary" className="padRight" onClick={()=>{this.downloadProjectTrack(track)}}><FaDownload/></Button>
+                                <Button variant="dark" onClick={()=>{this.props.deleteProjectTrack(track.id)}}><FaRegTrashAlt/></Button>
+                            </td>
+                        </tr>
+                    );
+                })}
                 </tbody>
             </Table>
+            </div>
         );
     }
-
-
-
 }
 
 export default ProjectTracksView;
