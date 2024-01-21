@@ -65,7 +65,7 @@ class App extends Component {
     this.setState({
       projects: [...this.state.projects, newProject],
       selectedProject: newProject,
-    });
+    },this.loadProjectTracks);
   }
 
   deleteProject(projectId){
@@ -74,7 +74,7 @@ class App extends Component {
       this.setState({
         projects: projects,
         selectedProject: projects[0],
-      });
+      },this.loadProjectTracks);
     });
   }
 
