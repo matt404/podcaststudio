@@ -1,6 +1,14 @@
+.displayNone{
+    display:none;
+}
+
 td.VideoCell{
     width:50%;
 }
 td.AudioCell{
     width:50%;
+}
+
+Table.AVTrack tbody tr td div button{
+    margin-right:5px;
 }

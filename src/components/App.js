@@ -17,6 +17,7 @@ class App extends Component {
     super(props);
     this.state = {
       devices: [],
+      displayMedia: [],
       footerWindowOpen: false,
       projects: [],
       projectTracks: [],
@@ -24,6 +25,7 @@ class App extends Component {
       selectedDeviceTracks: [],
       selectedProject: null,
       streaming: false,
+      streamingDisplayMedia: false,
       supportedConstraints: {},
     };
     this.database = new Database();
@@ -41,6 +43,8 @@ class App extends Component {
     this.saveTrackToProject = this.saveTrackToProject.bind(this);
     this.setProjectInfo = this.setProjectInfo.bind(this);
     this.setSelectedDeviceTracks = this.setSelectedDeviceTracks.bind(this);
+    this.startStreamingDisplayMedia = this.startStreamingDisplayMedia.bind(this);
+    this.stopStreamingDisplayMedia = this.stopStreamingDisplayMedia.bind(this);
     this.startRecording = this.startRecording.bind(this);
     this.stopRecording = this.stopRecording.bind(this);
     this.startStreaming = this.startStreaming.bind(this);
@@ -214,7 +218,16 @@ class App extends Component {
   }
 
   setSelectedDeviceTracks(selectedDeviceTracks){
+    console.log(selectedDeviceTracks);
     this.setState({selectedDeviceTracks: selectedDeviceTracks});
+  }
+
+  startStreamingDisplayMedia(){
+    this.setState({ streamingDisplayMedia: true });
+  }
+
+  stopStreamingDisplayMedia(){
+    this.setState({ streamingDisplayMedia: false });
   }
 
   startRecording(){
@@ -268,9 +281,12 @@ class App extends Component {
                   project={this.state.selectedProject}
                   recording={this.state.recording}
                   streaming={this.state.streaming}
+                  streamingDisplayMedia={this.state.streamingDisplayMedia}
                   selectedDeviceTracks={this.state.selectedDeviceTracks}
                   saveTrackToProject={this.saveTrackToProject}
                   setSelectedDeviceTracks={this.setSelectedDeviceTracks}
+                  startStreamingDisplayMedia={this.startStreamingDisplayMedia}
+                  stopStreamingDisplayMedia={this.stopStreamingDisplayMedia}
                   startRecording={this.startRecording}
                   stopRecording={this.stopRecording}
                   startStreaming={this.startStreaming}

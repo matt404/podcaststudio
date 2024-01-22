@@ -1,6 +1,7 @@
 import './VideoComponent.css'
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
+import Form from 'react-bootstrap/Form';
 
 class VideoComponent extends Component {
   static propTypes = {
@@ -21,22 +22,18 @@ class VideoComponent extends Component {
 
   }
 
-  componentDidMount() {
-
-  }
-
   render() {
     return (
         <div className="VideoDeviceSettings">
           <video ref={this.props.videoRef} autoPlay></video>
           <h5>Video Device</h5>
-          <select value={this.props.selectedVideoDeviceId} onChange={this.props.handleVideoDeviceChange}>
+          <Form.Select value={this.props.selectedVideoDeviceId} onChange={this.props.handleVideoDeviceChange}>
             {this.props.videoDevices.map(device => (
                 <option key={device.deviceId} value={device.deviceId}>
                   {device.label || `Video Device ${device.deviceId}`}
                 </option>
             ))}
-          </select>
+          </Form.Select>
 
         </div>
     );

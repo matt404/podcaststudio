@@ -1,6 +1,7 @@
 import './AudioVisualizer.css'
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
+import Form from 'react-bootstrap/Form';
 
 class AudioVisualizer extends Component {
   static propTypes = {
@@ -114,13 +115,13 @@ class AudioVisualizer extends Component {
         <div className="AudioDeviceSettings">
           <canvas ref={this.canvasRef} width="400" height="300"/>
           <h5>Audio Device</h5>
-          <select value={this.props.selectedAudioDeviceId} onChange={this.props.handleAudioDeviceChange}>
+          <Form.Select value={this.props.selectedAudioDeviceId} onChange={this.props.handleAudioDeviceChange}>
             {this.props.audioDevices.map(device => (
                 <option key={device.deviceId} value={device.deviceId}>
                   {device.label || `Audio Device ${device.deviceId}`}
                 </option>
             ))}
-          </select>
+          </Form.Select>
 
         </div>
     );

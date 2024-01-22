@@ -2,11 +2,12 @@ import './AVTrack.css';
 import Track from '../model/Track.js';
 import React, {Component} from 'react';
 import AudioVisualizer from "./AudioVisualizer";
-import {Table} from "react-bootstrap";
+import {Button, Table} from "react-bootstrap";
 import VideoComponent from "./VideoComponent";
 import PropTypes from "prop-types";
 import MediaFileUtil from "../util/MediaFileUtil";
 import Database from "../util/Database";
+import {FaCircle, FaPlay, FaSquare} from "react-icons/fa";
 
 class AVTrack extends Component {
   static propTypes = {
@@ -14,9 +15,12 @@ class AVTrack extends Component {
     project: PropTypes.object,
     recording: PropTypes.bool,
     streaming: PropTypes.bool,
+    streamingDisplayMedia: PropTypes.bool,
     saveTrackToProject: PropTypes.func,
     selectedDeviceTracks: PropTypes.array,
     setSelectedDeviceTracks: PropTypes.func,
+    startDisplayMediaStreams: PropTypes.func,
+    stopDisplayMediaStreams: PropTypes.func,
     startRecording: PropTypes.func,
     stopRecording: PropTypes.func,
     startStreaming: PropTypes.func,
@@ -38,6 +42,8 @@ class AVTrack extends Component {
     this.handleAudioDeviceChange = this.handleAudioDeviceChange.bind(this);
     this.handleDataAvailable = this.handleDataAvailable.bind(this);
     this.handleVideoDeviceChange = this.handleVideoDeviceChange.bind(this);
+    this.startDisplayMediaStreams = this.startDisplayMediaStreams.bind(this);
+    this.stopDisplayMediaStreams = this.stopDisplayMediaStreams.bind(this);
     this.startAVStreams = this.startAVStreams.bind(this);
     this.startRecording = this.startRecording.bind(this);
     this.stopAVStreams = this.stopAVStreams.bind(this);
@@ -72,6 +78,49 @@ class AVTrack extends Component {
       this.recordedChunks.push(event.data);
       this.recordedMediaType = event.data.type;
     }
+  };
+
+  startDisplayMediaStreams = async () => {
+    try {
+      //https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints
+      const displayMediaOptions = {
+        video: {
+          displaySurface: "browser",
+        },
+        audio: {
+          suppressLocalAudioPlayback: false,
+        },
+        preferCurrentTab: false,
+        selfBrowserSurface: "exclude",
+        systemAudio: "include",
+        surfaceSwitching: "include",
+        monitorTypeSurfaces: "include",
+      };
+      await navigator.mediaDevices.getDisplayMedia(displayMediaOptions)
+          .then(stream => {
+            this.videoRef.current.srcObject = stream;
+            this.props.setSelectedDeviceTracks(stream.getTracks());
+          });
+      this.props.startStreamingDisplayMedia();
+    } catch (error) {
+      console.error('Error accessing AV streams:', error);
+    }
+  }
+
+  stopDisplayMediaStreams = () => {
+    if (this.videoRef.current && this.videoRef.current.srcObject) {
+      try {
+        this.videoRef.current.srcObject.getTracks()
+            .forEach(track => {
+              track.stop();
+              this.videoRef.current.srcObject.removeTrack(track);
+            });
+
+      } catch (error) {
+        console.error('Error stopping AV streams:', error);
+      }
+    }
+    this.props.stopStreamingDisplayMedia();
   };
 
   startRecording = () => {
@@ -131,8 +180,8 @@ class AVTrack extends Component {
             exact: this.state.selectedVideoDeviceId,
           },
           frameRate: 15,
-          width: 640,
-          height: 480,
+          width: 1280,
+          height: 720,
           resizeMode: "none",
         }
       };
@@ -197,24 +246,49 @@ class AVTrack extends Component {
           <tr>
             <td colSpan={2}>
               <div>
-                <button
+                <Button
+                    variant="primary"
+                    onClick={this.startDisplayMediaStreams}
+                    className={this.props.streaming
+                        || this.props.streamingDisplayMedia
+                        || this.state.selectedAudioDeviceId === ''
+                        ? 'displayNone' : ''}><FaPlay/> Start Display Streams
+                </Button>
+                <Button
+                    variant="warning"
+                    onClick={this.stopDisplayMediaStreams}
+                    className={!this.props.streamingDisplayMedia
+                        || this.props.recording
+                        ? 'displayNone' : ''}><FaSquare/> Stop Display Streams
+                </Button>
+                <Button
+                    variant="primary"
                     onClick={this.startAVStreams}
-                    disabled={this.props.streaming || (this.state.selectedVideoDeviceId === '' && this.state.selectedAudioDeviceId === '')}>Start AV Streams
-                </button>
-                <button
+                    className={this.props.streaming
+                        || this.props.streamingDisplayMedia
+                        || (this.state.selectedVideoDeviceId === '' && this.state.selectedAudioDeviceId === '')
+                        ? 'displayNone' : ''}><FaPlay/> Start AV Streams
+                </Button>
+                <Button
+                    variant="warning"
                     onClick={this.stopAVStreams}
-                    disabled={!this.props.streaming || this.props.recording}>Stop AV Streams
-                </button>
-              </div>
-              <div>
-                <button
+                    className={!this.props.streaming
+                        || this.props.recording
+                        ? 'displayNone' : ''}><FaSquare/> Stop AV Streams
+                </Button>
+                <Button
+                    variant="danger"
                     onClick={this.startRecording}
-                    disabled={this.props.recording || !this.props.streaming}>Start Recording
-                </button>
-                <button
+                    className={(!this.props.streaming && !this.props.streamingDisplayMedia)
+                        || this.props.recording
+                        ? 'displayNone' : ''}><FaCircle/> Start Recording
+                </Button>
+                <Button
+                    variant="warning"
                     onClick={this.stopRecording}
-                    disabled={!this.props.recording}>Stop Recording
-                </button>
+                    className={!this.props.recording
+                        ? 'displayNone' : ''}><FaSquare/> Stop Recording
+                </Button>
               </div>
             </td>
           </tr>

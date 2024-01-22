@@ -1,5 +1,5 @@
 div.ProjectTracks{
-    height: calc(100% - 480px);
+    height: calc(100% - 460px);
     overflow: auto;
 }
 
