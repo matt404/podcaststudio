@@ -2,12 +2,13 @@ import navlogo from '../navlogo.png';
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import {Button, Container, Form, Nav, Navbar, NavDropdown} from "react-bootstrap";
-import {FaPodcast} from "react-icons/fa";
+import TimerClock from "./TimerClock";
 
 class MainNavBar extends Component {
   static propTypes = {
     recording: PropTypes.bool,
     streaming: PropTypes.bool,
+    streamingDisplayMedia: PropTypes.bool,
     createNewProject: PropTypes.func,
     exportProjectToVideoFile: PropTypes.func,
   }
@@ -22,12 +23,12 @@ class MainNavBar extends Component {
   }
   componentDidUpdate(prevProps, prevState, snapshot) {
     if(this.props.streaming !== prevProps.streaming || this.props.recording !== prevProps.recording){
-      if(this.props.streaming && this.props.recording){
+      if(this.props.recording){
         this.setState({
           activityStatusTitle: 'Recording',
           activityStatusCSS: 'danger',
         });
-      }else if(this.props.streaming && !this.props.recording){
+      }else if(this.props.streaming || this.props.streamingDisplayMedia){
         this.setState({
           activityStatusTitle: 'Active',
           activityStatusCSS: 'success',
@@ -63,6 +64,7 @@ class MainNavBar extends Component {
                 </NavDropdown>
               </Nav>
               <Form className="d-flex">
+                <TimerClock recording={this.props.recording} />
                 <Button
                     variant={this.state.activityStatusCSS}>
                   {this.state.activityStatusTitle}</Button>

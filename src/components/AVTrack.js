@@ -82,7 +82,7 @@ class AVTrack extends Component {
 
   startDisplayMediaStreams = async () => {
     try {
-      //https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints
+      //https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getDisplayMedia
       const displayMediaOptions = {
         video: {
           displaySurface: "browser",

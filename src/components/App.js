@@ -267,6 +267,7 @@ class App extends Component {
                   createNewProject={this.createNewProject}
                   recording={this.state.recording}
                   streaming={this.state.streaming}
+                  streamingDisplayMedia={this.state.streamingDisplayMedia}
                   exportProjectToVideoFile={this.exportProjectToVideoFile}/></Col>
           </Row>
           <Row className="AppContainerRow">
