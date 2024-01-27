@@ -1,16 +1,14 @@
 import './App.css';
 import Project from '../model/Project.js';
 import React, {Component} from "react";
-import {Container, Row, Col, Tab, Tabs} from "react-bootstrap";
-import ListAllDevices from "./ListAllDevices";
+import {Container, Row, Col} from "react-bootstrap";
 import AVTrack from "./AVTrack";
 import ProjectInfo from "./ProjectInfo";
 import MainNavBar from "./MainNavBar";
-import ListAllSupportedConstraints from "./ListAllSupportedConstraints";
-import MediaTrackSettings from "./MediaTrackSettings";
 import ProjectList from "./ProjectList";
 import ProjectTracksView from "./ProjectTracksView";
 import Database from '../util/Database.js';
+import Footer from "./Footer";
 
 class App extends Component {
   constructor(props) {
@@ -18,7 +16,8 @@ class App extends Component {
     this.state = {
       devices: [],
       displayMedia: [],
-      footerWindowOpen: false,
+      bodyClassName: 'App-body-footer-open',
+      footerClassName: 'App-footer-open',
       projects: [],
       projectTracks: [],
       recording: false,
@@ -247,14 +246,15 @@ class App extends Component {
   }
 
   toggleFooter(){
-    //TODO
-    if(this.state.footerWindowOpen){
-
-    }else{
-
+    let bodyClassName = 'App-body-footer-open';
+    let footerClassName = 'App-footer-open';
+    if (this.state.footerClassName === 'App-footer-open'){
+      bodyClassName = 'App-body-footer-closed';
+      footerClassName = 'App-footer-closed';
     }
     this.setState({
-      footerWindowOpen: !this.state.footerWindowOpen,
+      bodyClassName: bodyClassName,
+      footerClassName: footerClassName
     });
   }
 
@@ -270,7 +270,7 @@ class App extends Component {
                   streamingDisplayMedia={this.state.streamingDisplayMedia}
                   exportProjectToVideoFile={this.exportProjectToVideoFile}/></Col>
           </Row>
-          <Row className="AppContainerRow">
+          <Row className={this.state.bodyClassName}>
             <Col className="App-menu" xl={3} lg={3} md={3} sm={4}>
               <ProjectInfo
                   project={this.state.selectedProject}
@@ -307,25 +307,14 @@ class App extends Component {
             </Col>
           </Row>
           <Row>
-            <Col xl={12} className="App-footer-open">
-              <Tabs
-                  defaultActiveKey="activeSettingsTab"
-                  transition={false}
-                  id="noanim-tab-example"
-                  className="mb-3"
-              >
-                <Tab eventKey="activeSettingsTab" title="Live Settings">
-                  <MediaTrackSettings
-                      tracks={this.state.selectedDeviceTracks}/>
-                </Tab>
-                <Tab eventKey="devicesTab" title="Available Devices">
-                  <ListAllDevices devices={this.state.devices}/>
-                </Tab>
-                <Tab eventKey="debugTab" title="Supported Constraints">
-                  <ListAllSupportedConstraints
-                      supportedConstraints={this.state.supportedConstraints} />
-                </Tab>
-              </Tabs>
+            <Col className={this.state.footerClassName} xl={12}>
+              <Footer
+                  devices={this.state.devices}
+                  footerOpen={this.state.footerClassName === 'App-footer-open'}
+                  selectedDeviceTracks={this.state.selectedDeviceTracks}
+                  supportedConstraints={this.state.supportedConstraints}
+                  toggleFooter={this.toggleFooter}
+                  />
             </Col>
           </Row>
         </Container>

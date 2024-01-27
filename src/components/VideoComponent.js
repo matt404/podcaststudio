@@ -2,6 +2,7 @@ import './VideoComponent.css'
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import Form from 'react-bootstrap/Form';
+import {FaVideo} from "react-icons/fa";
 
 class VideoComponent extends Component {
   static propTypes = {
@@ -26,7 +27,7 @@ class VideoComponent extends Component {
     return (
         <div className="VideoDeviceSettings">
           <video ref={this.props.videoRef} autoPlay></video>
-          <h5>Video Device</h5>
+          <h5><FaVideo /> Video Device</h5>
           <Form.Select value={this.props.selectedVideoDeviceId} onChange={this.props.handleVideoDeviceChange}>
             {this.props.videoDevices.map(device => (
                 <option key={device.deviceId} value={device.deviceId}>

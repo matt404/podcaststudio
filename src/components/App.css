@@ -2,8 +2,13 @@
   text-align: center;
 }
 
-.AppContainerRow {
+.App-body-footer-open {
   height: calc(100% - 58px - 280px);
+  margin-top: 58px;
+}
+
+.App-body-footer-closed {
+  height: calc(100% - 58px - 50px);
   margin-top: 58px;
 }
 
@@ -14,16 +19,6 @@
 
 .App-body {
   height: 100%;
-  overflow: hidden;
-}
-
-.App-footer-open {
-  height: 280px;
-  overflow: hidden;
-}
-
-.App-footer-closed {
-  height: 50px;
   overflow: hidden;
 }
 
@@ -55,6 +50,15 @@
   vertical-align: center;
 }
 
+.App-footer-open {
+  height: 280px;
+  overflow: hidden;
+}
+
+.App-footer-closed {
+  height: 50px;
+  overflow: hidden;
+}
 .App-link {
   color: #61dafb;
 }

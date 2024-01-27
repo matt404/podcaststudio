@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import {Button, Container, Form, Nav, Navbar, NavDropdown} from "react-bootstrap";
 import TimerClock from "./TimerClock";
+import {FaCloudUploadAlt, FaFileExport, FaFileVideo} from "react-icons/fa";
 
 class MainNavBar extends Component {
   static propTypes = {
@@ -56,11 +57,11 @@ class MainNavBar extends Component {
                   navbarScroll
               >
                 <NavDropdown title="Project" id="navbarScrollingDropdown">
-                  <NavDropdown.Item onClick={this.props.createNewProject}>New</NavDropdown.Item>
+                  <NavDropdown.Item onClick={this.props.createNewProject}><FaFileVideo /> New</NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item onClick={this.props.exportProjectToVideoFile}>Export</NavDropdown.Item>
+                  <NavDropdown.Item onClick={this.props.exportProjectToVideoFile}><FaFileExport /> Export</NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item onClick={()=>{alert("Not implemented")}}>Upload</NavDropdown.Item>
+                  <NavDropdown.Item onClick={()=>{alert("Not implemented")}}><FaCloudUploadAlt /> Upload</NavDropdown.Item>
                 </NavDropdown>
               </Nav>
               <Form className="d-flex">
