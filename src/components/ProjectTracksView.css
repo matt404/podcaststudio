@@ -3,6 +3,16 @@ div.ProjectTracks{
     overflow: auto;
 }
 
+div.ProjectTrackStats div {
+    float:right;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    padding: 4px 10px;
+    color: #666;
+    border: 1px solid #666;
+    background-color: #060606;
+    display: inline-block;
+}
 
 td.track-preview{
     text-align: left;

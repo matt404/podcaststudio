@@ -20,6 +20,8 @@ class ProjectTracksView extends Component {
         };
 
         this.downloadProjectTrack = this.downloadProjectTrack.bind(this);
+        this.sumBlobSize = this.sumBlobSize.bind(this);
+        this.sumDuration = this.sumDuration.bind(this);
     }
 
     downloadProjectTrack(track){
@@ -35,11 +37,25 @@ class ProjectTracksView extends Component {
         })
 
     }
-
+    sumBlobSize(array) {
+        return MediaFileUtil.formatBytes(array.reduce((totalSize, obj) => {
+            return totalSize + (obj.blobSize || 0);
+        }, 0));
+    }
+    sumDuration(array) {
+        return MediaFileUtil.formatDuration(array.reduce((totalSize, obj) => {
+            return totalSize + (obj.duration || 0);
+        }, 0));
+    }
     render() {
         return (
             <div className="ProjectTracks">
-            <Table striped bordered hover variant="dark">
+                <div className="ProjectTrackStats">
+                    <div id="TrackCount">Track Count: {this.props.projectTracks.length}</div>
+                    <div id="TotalTrackSize">Total Size: {this.sumBlobSize(this.props.projectTracks)}</div>
+                    <div id="TotalTrackDuration">Total Runtime: {this.sumDuration(this.props.projectTracks)}</div>
+                </div>
+                <Table striped bordered hover variant="dark">
                 <thead>
                 <tr>
                     <th>&nbsp;</th>

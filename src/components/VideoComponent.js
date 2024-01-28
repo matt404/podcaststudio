@@ -7,12 +7,8 @@ import {FaVideo} from "react-icons/fa";
 class VideoComponent extends Component {
   static propTypes = {
     videoDevices: PropTypes.array,
-    recording: PropTypes.bool,
-    streaming: PropTypes.bool,
     selectedVideoDeviceId: PropTypes.string,
     handleVideoDeviceChange: PropTypes.func,
-    startVideoStream: PropTypes.func,
-    stopVideoStream: PropTypes.func,
     videoRef: PropTypes.any,
   }
   constructor(props) {

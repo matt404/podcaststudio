@@ -231,17 +231,13 @@ class AVTrack extends Component {
                 handleVideoDeviceChange={this.handleVideoDeviceChange}
                 videoDevices={this.props.devices.filter(device => device.kind === 'videoinput')}
                 selectedVideoDeviceId={this.state.selectedVideoDeviceId}
-                streaming={this.props.streaming}
-                recording={this.props.recording}
-                videoRef={this.videoRef}/></td>
+                videoRef={this.videoRef} /></td>
             <td className="AudioCell"><AudioVisualizer
+                enableVisualizer={this.props.streaming || this.props.streamingDisplayMedia}
                 audioDevices={this.props.devices.filter(device => device.kind === 'audioinput')}
-                videoRef={this.videoRef}
+                selectedAudioTracks={this.props.selectedDeviceTracks.filter(device => device.kind === 'audio')}
                 handleAudioDeviceChange={this.handleAudioDeviceChange}
-                mediaStream={this.state.mediaStream}
-                selectedAudioDeviceId={this.state.selectedAudioDeviceId}
-                recording={this.props.recording}
-                streaming={this.props.streaming}/></td>
+                videoRef={this.videoRef} /></td>
           </tr>
           <tr>
             <td colSpan={2}>

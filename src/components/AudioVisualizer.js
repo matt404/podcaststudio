@@ -7,12 +7,9 @@ import {FaMicrophone} from "react-icons/fa";
 class AudioVisualizer extends Component {
   static propTypes = {
     audioDevices: PropTypes.array,
+    enableVisualizer: PropTypes.bool,
     handleAudioDeviceChange: PropTypes.func,
-    recording: PropTypes.bool,
-    streaming: PropTypes.bool,
-    selectedAudioDeviceId: PropTypes.string,
-    startAudioStream: PropTypes.func,
-    stopAudioStream: PropTypes.func,
+    selectedAudioTracks: PropTypes.array,
   }
   constructor(props) {
     super(props);
@@ -21,42 +18,34 @@ class AudioVisualizer extends Component {
 
     this.canvasRef = React.createRef();
     this.animationId = null;
+    this.audioContext = null;
 
     this.closeAudioContext = this.closeAudioContext.bind(this);
+    this.handleStream = this.handleStream.bind(this);
+    this.setupAudioContext = this.setupAudioContext.bind(this);
   }
 
-  componentDidMount() {
-  }
-
-  componentDidUpdate() {
-    if(this.props.streaming){
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if(this.props.enableVisualizer && !prevProps.enableVisualizer && this.props.selectedAudioTracks.length > 0){
       this.setupAudioContext();
-    }else{
+    }else if(!this.props.enableVisualizer && prevProps.enableVisualizer){
       this.closeAudioContext();
     }
   }
 
   componentWillUnmount() {
+    this.closeAudioContext();
   }
 
   setupAudioContext = () => {
-    if(this.props.selectedAudioDeviceId !== '') {
+    if(this.audioContext === null || this.audioContext.state === 'closed'){
+      console.log("Setting up audio context")
       this.audioContext = new AudioContext();
       this.analyser = this.audioContext.createAnalyser();
       this.analyser.fftSize = 2048;
       this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
 
-      const constraints = {
-        audio: {
-          exact: {
-            deviceId: this.props.selectedAudioDeviceId
-          }
-        }
-      };
-
-      navigator.mediaDevices.getUserMedia(constraints)
-          .then(this.handleStream)
-          .catch(err => console.error('Error accessing audio stream:', err));
+      this.handleStream();
     }
   };
 
@@ -67,8 +56,9 @@ class AudioVisualizer extends Component {
     }
   }
 
-  handleStream = (stream) => {
-    const source= this.audioContext.createMediaStreamSource(stream);
+  handleStream = () => {
+    const mediaStream = new MediaStream(this.props.selectedAudioTracks);
+    const source= this.audioContext.createMediaStreamSource(mediaStream);
     source.connect(this.analyser);
     this.draw();
   };

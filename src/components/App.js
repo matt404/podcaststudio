@@ -21,13 +21,13 @@ class App extends Component {
       projects: [],
       projectTracks: [],
       recording: false,
-      selectedDeviceTracks: [],
       selectedProject: null,
       streaming: false,
       streamingDisplayMedia: false,
       supportedConstraints: {},
     };
     this.database = new Database();
+    this.selectedDeviceTracks = [];
     this.createNewProject = this.createNewProject.bind(this);
     this.deleteProject = this.deleteProject.bind(this);
     this.deleteProjectTrack = this.deleteProjectTrack.bind(this);
@@ -218,7 +218,7 @@ class App extends Component {
 
   setSelectedDeviceTracks(selectedDeviceTracks){
     console.log(selectedDeviceTracks);
-    this.setState({selectedDeviceTracks: selectedDeviceTracks});
+    this.selectedDeviceTracks = selectedDeviceTracks;
   }
 
   startStreamingDisplayMedia(){
@@ -226,7 +226,10 @@ class App extends Component {
   }
 
   stopStreamingDisplayMedia(){
-    this.setState({ streamingDisplayMedia: false });
+    this.selectedDeviceTracks = [];
+    this.setState({
+      streamingDisplayMedia: false
+    });
   }
 
   startRecording(){
@@ -242,7 +245,10 @@ class App extends Component {
   }
 
   stopStreaming(){
-    this.setState({ streaming: false });
+    this.selectedDeviceTracks = [];
+    this.setState({
+      streaming: false
+    });
   }
 
   toggleFooter(){
@@ -283,7 +289,7 @@ class App extends Component {
                   recording={this.state.recording}
                   streaming={this.state.streaming}
                   streamingDisplayMedia={this.state.streamingDisplayMedia}
-                  selectedDeviceTracks={this.state.selectedDeviceTracks}
+                  selectedDeviceTracks={this.selectedDeviceTracks}
                   saveTrackToProject={this.saveTrackToProject}
                   setSelectedDeviceTracks={this.setSelectedDeviceTracks}
                   startStreamingDisplayMedia={this.startStreamingDisplayMedia}
@@ -311,7 +317,7 @@ class App extends Component {
               <Footer
                   devices={this.state.devices}
                   footerOpen={this.state.footerClassName === 'App-footer-open'}
-                  selectedDeviceTracks={this.state.selectedDeviceTracks}
+                  selectedDeviceTracks={this.selectedDeviceTracks}
                   supportedConstraints={this.state.supportedConstraints}
                   toggleFooter={this.toggleFooter}
                   />
