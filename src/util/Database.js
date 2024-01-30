@@ -15,17 +15,18 @@ class Database {
         this.updateTrack = this.updateTrack.bind(this);
     }
 
-    addProject(project) {
+    addProject(project, callback) {
         const transaction = this.db.transaction(["projects"], "readwrite");
         const objectStore = transaction.objectStore("projects");
         const request = objectStore.add(project);
 
         request.onsuccess = function(event) {
             console.log("Project added successfully.");
+            callback(event);
         };
 
         request.onerror = function(event) {
-            console.log("Error adding project: " + event.target.errorCode);
+            console.log("Error adding project: " + event.target.errorCode, event);
         };
     }
 
@@ -39,7 +40,7 @@ class Database {
         };
 
         request.onerror = function(event) {
-            console.log("Error saving track: " + event.target.errorCode);
+            console.log("Error saving track: " + event.target.errorCode, event);
         };
     }
 
@@ -53,7 +54,7 @@ class Database {
         };
 
         request.onerror = function(event) {
-            console.log("Error deleting project: " + event.target.errorCode);
+            console.log("Error deleting project: " + event.target.errorCode, event);
         };
     }
 
@@ -67,7 +68,7 @@ class Database {
         };
 
         request.onerror = function(event) {
-            console.log("Error deleting track: " + event.target.errorCode);
+            console.log("Error deleting track: " + event.target.errorCode, event);
         };
     }
 
@@ -83,6 +84,7 @@ class Database {
                 projects.push(cursor.value);
                 cursor.continue();
             } else {
+                projects.sort((a, b) => b.lastModified - a.lastModified)
                 callback(projects);
             }
         };
@@ -108,7 +110,7 @@ class Database {
             };
 
             request.onerror = function(event) {
-                console.log("Error retrieving track: " + event.target.errorCode);
+                console.log("Error retrieving track: " + event.target.errorCode, event);
             };
         });
     }
@@ -138,7 +140,7 @@ class Database {
         };
 
         request.onerror = function(event) {
-            console.log("Error retrieving project: " + event.target.errorCode);
+            console.log("Error retrieving project: " + event.target.errorCode, event);
         };
     }
 
@@ -153,7 +155,7 @@ class Database {
             };
 
             request.onerror = function(event) {
-                console.log("Error retrieving track: " + event.target.errorCode);
+                console.log("Error retrieving track: " + event.target.errorCode, event);
                 reject(event.target.errorCode);
             };
         });
@@ -178,13 +180,14 @@ class Database {
             };
 
             request.onerror = (event) => {
-                console.log("Error opening database: " + event.target.errorCode);
+                console.log("Error opening database: " + event.target.errorCode, event);
                 reject(event.target.errorCode);
             };
         });
     }
 
     updateProject(project) {
+        project.lastModified = new Date();
         const transaction = this.db.transaction(["projects"], "readwrite");
         const objectStore = transaction.objectStore("projects");
         const request = objectStore.put(project);
@@ -194,7 +197,7 @@ class Database {
         };
 
         request.onerror = function(event) {
-            console.log("Error updating project: " + event.target.errorCode);
+            console.log("Error updating project: " + event.target.errorCode, event);
         };
     }
 
@@ -208,7 +211,7 @@ class Database {
         };
 
         request.onerror = function(event) {
-            console.log("Error updating track: " + event.target.errorCode);
+            console.log("Error updating track: " + event.target.errorCode, event);
         };
     }
 }

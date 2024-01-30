@@ -64,11 +64,9 @@ class App extends Component {
   createNewProject(){
     const newId = Database.generateUUID();
     const newProject = new Project(newId, 'Project ' + (this.state.projects.length + 1), 'Project Description');
-    this.database.addProject(newProject);
-    this.setState({
-      projects: [...this.state.projects, newProject],
-      selectedProject: newProject,
-    },this.loadProjectTracks);
+    this.database.addProject(newProject, () => {
+      this.initializeProjectState();
+    });
   }
 
   deleteProject(projectId){
@@ -187,6 +185,9 @@ class App extends Component {
   }
 
   openProject(project){
+    if(this.state.streaming || this.state.streamingDisplayMedia || this.state.recording){
+        return;
+    }
     this.setState({
       selectedProject: project,
     },this.loadProjectTracks);
@@ -309,7 +310,8 @@ class App extends Component {
               <ProjectList
                   deleteProject={this.deleteProject}
                   openProject={this.openProject}
-                  projects={this.state.projects} />
+                  projects={this.state.projects}
+                  selectedProject={this.state.selectedProject}/>
             </Col>
           </Row>
           <Row>

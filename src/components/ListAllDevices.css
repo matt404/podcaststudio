@@ -5,10 +5,6 @@ table.Devices td{
   color: white;
   background-color: #515966;
 }
-table.Devices td.title{
-  color: white;
-  background-color: #282c34;
-}
 div.devicesContainer{
   height: 200px;
   overflow: auto;

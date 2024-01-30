@@ -1,4 +1,4 @@
-import './ListAllDevices.css'
+import './ProjectList.css'
 import React, { Component } from 'react';
 import {Button, Table} from "react-bootstrap";
 import PropTypes from "prop-types";
@@ -9,6 +9,7 @@ class ProjectList extends Component {
         deleteProject: PropTypes.func,
         openProject: PropTypes.func,
         projects: PropTypes.array,
+        selectedProjectId: PropTypes.string,
     }
     constructor(props) {
         super(props);
@@ -27,14 +28,20 @@ class ProjectList extends Component {
                         <th>&nbsp;</th>
                     </tr>
                     </thead>
-                    {this.props.projects && this.props.projects.map((project, index) => (
-                        <tbody key={project.id}>
-                        <tr>
-                            <td onClick={()=>{this.props.openProject(project)}} className="title">{project.name}</td>
-                            <td align={"right"}><Button variant="dark" onClick={()=>{this.props.deleteProject(project.id)}}><FaRegTrashAlt/></Button></td>
-                        </tr>
-                        </tbody>
-                    ))}
+                    {this.props.projects && this.props.projects.map((project, index) => {
+                        let projectClass = "ProjectListDisplay";
+                        if(this.props.selectedProject && project.id === this.props.selectedProject.id){
+                             projectClass += " ProjectListDisplaySelected";
+                        }
+                        return (
+                            <tbody key={project.id}>
+                            <tr>
+                                <td onClick={()=>{this.props.openProject(project)}} className={projectClass}>{project.name}</td>
+                                <td align={"right"}><Button variant="dark" onClick={()=>{this.props.deleteProject(project.id)}}><FaRegTrashAlt/></Button></td>
+                            </tr>
+                            </tbody>
+                        );
+                    })}
                 </Table>
             </div>
         );

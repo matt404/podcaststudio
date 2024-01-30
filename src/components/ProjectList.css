@@ -1,0 +1,9 @@
+td.ProjectListDisplay{
+    cursor: pointer;
+    color: #c0c0c0;
+}
+td.ProjectListDisplaySelected{
+     cursor: pointer;
+     color: #7994cc;
+     font-weight: bold;
+ }
