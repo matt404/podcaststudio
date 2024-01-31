@@ -1,8 +1,8 @@
-canvas{
+canvas {
   background-color: #c0c0c0;
 }
 
-div.AudioDeviceSettings select{
+div.AudioDeviceSettings select {
   width: 80%;
   height: 30px;
   font-size: small;

@@ -1,28 +1,28 @@
-div.ProjectTracks{
-    height: calc(100% - 460px);
-    overflow: auto;
+div.ProjectTracks {
+  height: calc(100% - 460px);
+  overflow: auto;
 }
 
 div.ProjectTrackStats div {
-    float:right;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    padding: 4px 10px;
-    color: #b6b6b6;
-    border: 1px solid #666;
-    background-color: #282b2f;
-    display: inline-block;
+  float: right;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  padding: 4px 10px;
+  color: #b6b6b6;
+  border: 1px solid #666;
+  background-color: #282b2f;
+  display: inline-block;
 }
 
-td.track-preview{
-    text-align: left;
+td.track-preview {
+  text-align: left;
 }
 
-td.track-preview video{
-    width: auto;
-    height: 100px;
+td.track-preview video {
+  width: auto;
+  height: 100px;
 }
 
-td.track-preview button.padRight{
-    margin-right: 10px;
+td.track-preview button.padRight {
+  margin-right: 10px;
 }

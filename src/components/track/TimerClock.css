@@ -1,12 +1,13 @@
-div.TimerClockInactive{
-    color: #666;
-    padding: 8px;
-    border: 1px solid #666;
-    margin-right: 10px;
+div.TimerClockInactive {
+  color: #666;
+  padding: 8px;
+  border: 1px solid #666;
+  margin-right: 10px;
 }
-div.TimerClockActive{
-    color: #ccc;
-    padding: 8px;
-    border: 1px solid red;
-    margin-right: 10px;
+
+div.TimerClockActive {
+  color: #ccc;
+  padding: 8px;
+  border: 1px solid red;
+  margin-right: 10px;
 }

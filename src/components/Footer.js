@@ -5,9 +5,9 @@ import {Tab, Tabs, Button} from "react-bootstrap";
 import ListAllDevices from "./media/ListAllDevices";
 import ListAllSupportedConstraints from "./media/ListAllSupportedConstraints";
 import MediaTrackSettings from "./media/MediaTrackSettings";
-import {FaAngleDoubleDown, FaAngleDoubleUp } from "react-icons/fa";
+import {FaAngleDoubleDown, FaAngleDoubleUp} from "react-icons/fa";
 
-class Footer extends Component{
+class Footer extends Component {
   static propTypes = {
     devices: PropTypes.array,
     footerOpen: PropTypes.bool,
@@ -16,40 +16,39 @@ class Footer extends Component{
     toggleFooter: PropTypes.func,
   }
 
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
   }
 
-  render(){
-      const footerIcon = !this.props.footerOpen ? <FaAngleDoubleUp /> : <FaAngleDoubleDown />;
-        return (
-            <footer>
-              <Button className="footer-toggle"
-                      variant={"outline-secondary"}
-                      onClick={this.props.toggleFooter}>{footerIcon}</Button>
-              <Tabs
-                  defaultActiveKey="activeSettingsTab"
-                  transition={true}
-                  id="noanim-tab-example"
-                  className="mb-3"
-              >
-                <Tab eventKey="activeSettingsTab" title="Live Settings">
-                  <MediaTrackSettings
-                      tracks={this.props.selectedDeviceTracks}/>
-                </Tab>
-                <Tab eventKey="devicesTab" title="Available Devices">
-                  <ListAllDevices devices={this.props.devices}/>
-                </Tab>
-                <Tab eventKey="debugTab" title="Supported Constraints">
-                  <ListAllSupportedConstraints
-                      supportedConstraints={this.props.supportedConstraints} />
-                </Tab>
-              </Tabs>
-            </footer>
-        );
-    }
+  render() {
+    const footerIcon = !this.props.footerOpen ? <FaAngleDoubleUp/> : <FaAngleDoubleDown/>;
+    return (
+        <footer>
+          <Button className="footer-toggle"
+                  variant={"outline-secondary"}
+                  onClick={this.props.toggleFooter}>{footerIcon}</Button>
+          <Tabs
+              defaultActiveKey="activeSettingsTab"
+              transition={true}
+              id="noanim-tab-example"
+              className="mb-3"
+          >
+            <Tab eventKey="activeSettingsTab" title="Live Settings">
+              <MediaTrackSettings
+                  tracks={this.props.selectedDeviceTracks}/>
+            </Tab>
+            <Tab eventKey="devicesTab" title="Available Devices">
+              <ListAllDevices devices={this.props.devices}/>
+            </Tab>
+            <Tab eventKey="debugTab" title="Supported Constraints">
+              <ListAllSupportedConstraints
+                  supportedConstraints={this.props.supportedConstraints}/>
+            </Tab>
+          </Tabs>
+        </footer>
+    );
+  }
 }
 
 export default Footer;

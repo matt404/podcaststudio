@@ -1,4 +1,3 @@
-
 class AudioVisualizerTest extends React.Component {
   constructor(props) {
     super(props);
@@ -25,13 +24,12 @@ class AudioVisualizerTest extends React.Component {
 
   tick() {
     this.analyser.getByteFrequencyData(this.dataArray);
-    this.setState({ audioData: this.dataArray });
+    this.setState({audioData: this.dataArray});
     this.rafId = requestAnimationFrame(this.tick);
   }
 
 
-
   render() {
-    return <AudioVisualizer audioData={this.state.audioData} />;
+    return <AudioVisualizer audioData={this.state.audioData}/>;
   }
 }

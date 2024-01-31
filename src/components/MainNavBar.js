@@ -7,12 +7,14 @@ import {FaCloudUploadAlt, FaFileExport, FaFileVideo} from "react-icons/fa";
 
 class MainNavBar extends Component {
   static propTypes = {
+    createNewProject: PropTypes.func,
+    exportProjectToVideoFile: PropTypes.func,
     recording: PropTypes.bool,
     streaming: PropTypes.bool,
     streamingDisplayMedia: PropTypes.bool,
-    createNewProject: PropTypes.func,
-    exportProjectToVideoFile: PropTypes.func,
+    toggleShowWelcomeMessage: PropTypes.func,
   }
+
   constructor(props) {
     super(props);
 
@@ -22,19 +24,20 @@ class MainNavBar extends Component {
     };
 
   }
+
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if(this.props.streaming !== prevProps.streaming || this.props.recording !== prevProps.recording){
-      if(this.props.recording){
+    if (this.props.streaming !== prevProps.streaming || this.props.recording !== prevProps.recording) {
+      if (this.props.recording) {
         this.setState({
           activityStatusTitle: 'Recording',
           activityStatusCSS: 'danger',
         });
-      }else if(this.props.streaming || this.props.streamingDisplayMedia){
+      } else if (this.props.streaming || this.props.streamingDisplayMedia) {
         this.setState({
           activityStatusTitle: 'Active',
           activityStatusCSS: 'success',
         });
-      }else{
+      } else {
         this.setState({
           activityStatusTitle: 'Stopped',
           activityStatusCSS: 'secondary',
@@ -48,24 +51,30 @@ class MainNavBar extends Component {
         <Navbar expand="lg" className="bg-body-tertiary"
                 data-bs-theme="dark">
           <Container fluid>
-            <Navbar.Brand href="#"><img alt="logo" src={navlogo} /> PodCastStudio</Navbar.Brand>
-            <Navbar.Toggle aria-controls="navbarScroll" />
+            <Navbar.Brand href="#"><img alt="logo" src={navlogo}/> PodCastStudio</Navbar.Brand>
+            <Navbar.Toggle aria-controls="navbarScroll"/>
             <Navbar.Collapse id="navbarScroll">
               <Nav
                   className="me-auto my-2 my-lg-0"
-                  style={{ maxHeight: '100px' }}
+                  style={{maxHeight: '100px'}}
                   navbarScroll
               >
                 <NavDropdown title="Project" id="navbarScrollingDropdown">
-                  <NavDropdown.Item onClick={this.props.createNewProject}><FaFileVideo /> New</NavDropdown.Item>
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item onClick={this.props.exportProjectToVideoFile}><FaFileExport /> Export</NavDropdown.Item>
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item onClick={()=>{alert("Not implemented")}}><FaCloudUploadAlt /> Upload</NavDropdown.Item>
+                  <NavDropdown.Item onClick={this.props.createNewProject}><FaFileVideo/> New</NavDropdown.Item>
+                  <NavDropdown.Divider/>
+                  <NavDropdown.Item
+                      onClick={this.props.exportProjectToVideoFile}><FaFileExport/> Export</NavDropdown.Item>
+                  <NavDropdown.Divider/>
+                  <NavDropdown.Item onClick={() => {
+                    alert("Not implemented")
+                  }}><FaCloudUploadAlt/> Upload</NavDropdown.Item>
+                </NavDropdown>
+                <NavDropdown title="Help" id="navbarScrollingDropdown">
+                  <NavDropdown.Item onClick={this.props.toggleShowWelcomeMessage}><FaFileVideo/> Welcome</NavDropdown.Item>
                 </NavDropdown>
               </Nav>
               <Form className="d-flex">
-                <TimerClock recording={this.props.recording} />
+                <TimerClock recording={this.props.recording}/>
                 <Button
                     variant={this.state.activityStatusCSS}>
                   {this.state.activityStatusTitle}</Button>
@@ -73,7 +82,8 @@ class MainNavBar extends Component {
             </Navbar.Collapse>
           </Container>
         </Navbar>
-    );
+    )
+        ;
   }
 }
 

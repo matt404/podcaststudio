@@ -35,8 +35,8 @@
 
 .App-rightPane {
   background-color: #454c57;
-  overflow:auto;
-  height:100%;
+  overflow: auto;
+  height: 100%;
 }
 
 .App-header {
@@ -59,6 +59,7 @@
   height: 50px;
   overflow: hidden;
 }
+
 .App-link {
   color: #61dafb;
 }

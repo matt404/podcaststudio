@@ -1,11 +1,13 @@
-table.Devices{
+table.Devices {
   font-size: small;
 }
-table.Devices td{
+
+table.Devices td {
   color: white;
   background-color: #515966;
 }
-div.devicesContainer{
+
+div.devicesContainer {
   height: 200px;
   overflow: auto;
 }

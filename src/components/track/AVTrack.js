@@ -26,6 +26,7 @@ class AVTrack extends Component {
     startStreaming: PropTypes.func,
     stopStreaming: PropTypes.func,
   }
+
   constructor(props) {
     super(props);
 
@@ -51,7 +52,7 @@ class AVTrack extends Component {
   }
 
   componentDidUpdate() {
-    if(this.props.devices.length > 0){
+    if (this.props.devices.length > 0) {
       const audioDevices = this.props.devices.filter(device => device.kind === 'audioinput');
       const videoDevices = this.props.devices.filter(device => device.kind === 'videoinput');
       let devices = {
@@ -59,15 +60,15 @@ class AVTrack extends Component {
         selectedVideoDeviceId: '',
       }
       let updateState = false;
-      if(audioDevices.length > 0 && this.state.selectedAudioDeviceId === '' && audioDevices[0].deviceId !== ''){
+      if (audioDevices.length > 0 && this.state.selectedAudioDeviceId === '' && audioDevices[0].deviceId !== '') {
         devices.selectedAudioDeviceId = audioDevices[0].deviceId;
         updateState = true;
       }
-      if(videoDevices.length > 0 && this.state.selectedVideoDeviceId === '' && videoDevices[0].deviceId !== ''){
+      if (videoDevices.length > 0 && this.state.selectedVideoDeviceId === '' && videoDevices[0].deviceId !== '') {
         devices.selectedVideoDeviceId = videoDevices[0].deviceId;
         updateState = true;
       }
-      if(updateState){
+      if (updateState) {
         this.setState(devices);
       }
     }
@@ -137,7 +138,7 @@ class AVTrack extends Component {
   stopRecording = () => {
     this.mediaRecorderRef.current.onstop = () => {
 
-      const blob = new Blob(this.recordedChunks, { type: this.recordedMediaType });
+      const blob = new Blob(this.recordedChunks, {type: this.recordedMediaType});
 
       MediaFileUtil.blobToArrayBuffer(blob, (dataUrl) => {
 
@@ -214,12 +215,12 @@ class AVTrack extends Component {
 
   handleAudioDeviceChange = (event) => {
     const newDeviceId = event.target.value;
-    this.setState({ selectedAudioDeviceId: newDeviceId });
+    this.setState({selectedAudioDeviceId: newDeviceId});
   };
 
   handleVideoDeviceChange = (event) => {
     const newDeviceId = event.target.value;
-    this.setState({ selectedVideoDeviceId: newDeviceId });
+    this.setState({selectedVideoDeviceId: newDeviceId});
   };
 
   render() {
@@ -231,13 +232,13 @@ class AVTrack extends Component {
                 handleVideoDeviceChange={this.handleVideoDeviceChange}
                 videoDevices={this.props.devices.filter(device => device.kind === 'videoinput')}
                 selectedVideoDeviceId={this.state.selectedVideoDeviceId}
-                videoRef={this.videoRef} /></td>
+                videoRef={this.videoRef}/></td>
             <td className="AudioCell"><AudioVisualizer
                 enableVisualizer={this.props.streaming || this.props.streamingDisplayMedia}
                 audioDevices={this.props.devices.filter(device => device.kind === 'audioinput')}
                 selectedAudioTracks={this.props.selectedDeviceTracks.filter(device => device.kind === 'audio')}
                 handleAudioDeviceChange={this.handleAudioDeviceChange}
-                videoRef={this.videoRef} /></td>
+                videoRef={this.videoRef}/></td>
           </tr>
           <tr>
             <td colSpan={2}>
@@ -246,37 +247,37 @@ class AVTrack extends Component {
                     variant="primary"
                     onClick={this.startDisplayMediaStreams}
                     className={this.props.streaming
-                        || this.props.streamingDisplayMedia
-                        || this.state.selectedAudioDeviceId === ''
+                    || this.props.streamingDisplayMedia
+                    || this.state.selectedAudioDeviceId === ''
                         ? 'displayNone' : ''}><FaPlay/> Start Display Streams
                 </Button>
                 <Button
                     variant="warning"
                     onClick={this.stopDisplayMediaStreams}
                     className={!this.props.streamingDisplayMedia
-                        || this.props.recording
+                    || this.props.recording
                         ? 'displayNone' : ''}><FaSquare/> Stop Display Streams
                 </Button>
                 <Button
                     variant="primary"
                     onClick={this.startAVStreams}
                     className={this.props.streaming
-                        || this.props.streamingDisplayMedia
-                        || (this.state.selectedVideoDeviceId === '' && this.state.selectedAudioDeviceId === '')
+                    || this.props.streamingDisplayMedia
+                    || (this.state.selectedVideoDeviceId === '' && this.state.selectedAudioDeviceId === '')
                         ? 'displayNone' : ''}><FaPlay/> Start AV Streams
                 </Button>
                 <Button
                     variant="warning"
                     onClick={this.stopAVStreams}
                     className={!this.props.streaming
-                        || this.props.recording
+                    || this.props.recording
                         ? 'displayNone' : ''}><FaSquare/> Stop AV Streams
                 </Button>
                 <Button
                     variant="danger"
                     onClick={this.startRecording}
                     className={(!this.props.streaming && !this.props.streamingDisplayMedia)
-                        || this.props.recording
+                    || this.props.recording
                         ? 'displayNone' : ''}><FaCircle/> Start Recording
                 </Button>
                 <Button

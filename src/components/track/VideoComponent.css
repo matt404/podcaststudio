@@ -5,8 +5,8 @@ video{
   background-color: #000000;
 }
 
-div.VideoDeviceSettings select{
-    width: 80%;
-    height: 30px;
-    font-size: small;
+div.VideoDeviceSettings select {
+  width: 80%;
+  height: 30px;
+  font-size: small;
 }

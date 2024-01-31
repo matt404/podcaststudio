@@ -11,11 +11,11 @@ class VideoComponent extends Component {
     handleVideoDeviceChange: PropTypes.func,
     videoRef: PropTypes.any,
   }
+
   constructor(props) {
     super(props);
 
-    this.state = {
-    };
+    this.state = {};
 
   }
 
@@ -23,7 +23,7 @@ class VideoComponent extends Component {
     return (
         <div className="VideoDeviceSettings">
           <video ref={this.props.videoRef} autoPlay></video>
-          <h5><FaVideo /> Video Device</h5>
+          <h5><FaVideo/> Video Device</h5>
           <Form.Select value={this.props.selectedVideoDeviceId} onChange={this.props.handleVideoDeviceChange}>
             {this.props.videoDevices.map(device => (
                 <option key={device.deviceId} value={device.deviceId}>

@@ -1,5 +1,5 @@
 import './AudioVisualizer.css'
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import Form from 'react-bootstrap/Form';
 import {FaMicrophone} from "react-icons/fa";
@@ -11,10 +11,10 @@ class AudioVisualizer extends Component {
     handleAudioDeviceChange: PropTypes.func,
     selectedAudioTracks: PropTypes.array,
   }
+
   constructor(props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
 
     this.canvasRef = React.createRef();
     this.animationId = null;
@@ -26,9 +26,9 @@ class AudioVisualizer extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if(this.props.enableVisualizer && !prevProps.enableVisualizer && this.props.selectedAudioTracks.length > 0){
+    if (this.props.enableVisualizer && !prevProps.enableVisualizer && this.props.selectedAudioTracks.length > 0) {
       this.setupAudioContext();
-    }else if(!this.props.enableVisualizer && prevProps.enableVisualizer){
+    } else if (!this.props.enableVisualizer && prevProps.enableVisualizer) {
       this.closeAudioContext();
     }
   }
@@ -38,7 +38,7 @@ class AudioVisualizer extends Component {
   }
 
   setupAudioContext = () => {
-    if(this.audioContext === null || this.audioContext.state === 'closed'){
+    if (this.audioContext === null || this.audioContext.state === 'closed') {
       console.log("Setting up audio context")
       this.audioContext = new AudioContext();
       this.analyser = this.audioContext.createAnalyser();
@@ -58,7 +58,7 @@ class AudioVisualizer extends Component {
 
   handleStream = () => {
     const mediaStream = new MediaStream(this.props.selectedAudioTracks);
-    const source= this.audioContext.createMediaStreamSource(mediaStream);
+    const source = this.audioContext.createMediaStreamSource(mediaStream);
     source.connect(this.analyser);
     this.draw();
   };
@@ -105,7 +105,7 @@ class AudioVisualizer extends Component {
     return (
         <div className="AudioDeviceSettings">
           <canvas ref={this.canvasRef} width="400" height="300"/>
-          <h5><FaMicrophone /> Audio Device</h5>
+          <h5><FaMicrophone/> Audio Device</h5>
           <Form.Select value={this.props.selectedAudioDeviceId} onChange={this.props.handleAudioDeviceChange}>
             {this.props.audioDevices.map(device => (
                 <option key={device.deviceId} value={device.deviceId}>

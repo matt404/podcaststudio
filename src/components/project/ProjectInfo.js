@@ -7,6 +7,7 @@ class ProjectInfo extends Component {
     project: PropTypes.object,
     setProjectInfo: PropTypes.func,
   }
+
   constructor(props) {
     super(props);
 
@@ -21,14 +22,14 @@ class ProjectInfo extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if(prevProps.project !== this.props.project){
+    if (prevProps.project !== this.props.project) {
       document.getElementById("ProjectName").value = this.props.project ? this.props.project.name : '';
       document.getElementById("ProjectDesc").value = this.props.project ? this.props.project.description : '';
     }
   }
 
-  setProjectInfo(event){
-    if(this.inputTimeoutId){
+  setProjectInfo(event) {
+    if (this.inputTimeoutId) {
       clearTimeout(this.inputTimeoutId);
     }
     this.inputTimeoutId = setTimeout(() => {
@@ -47,13 +48,13 @@ class ProjectInfo extends Component {
               <Form.Label>Project Name</Form.Label>
               <Form.Control id="ProjectName" type="text"
                             defaultValue={this.props.project ? this.props.project.name : ''}
-                            onChange={this.setProjectInfo} />
+                            onChange={this.setProjectInfo}/>
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Description</Form.Label>
               <Form.Control id="ProjectDesc" as="textarea" rows={3}
                             defaultValue={this.props.project ? this.props.project.description : ''}
-                            onChange={this.setProjectInfo} />
+                            onChange={this.setProjectInfo}/>
             </Form.Group>
           </Form>
         </div>

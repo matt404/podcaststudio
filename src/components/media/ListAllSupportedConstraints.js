@@ -5,11 +5,11 @@ class ListAllSupportedConstraints extends Component {
   static propTypes = {
     supportedConstraints: PropTypes.object,
   }
+
   constructor(props) {
     super(props);
 
-    this.state = {
-    };
+    this.state = {};
   }
 
   render() {

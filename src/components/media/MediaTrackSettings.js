@@ -10,8 +10,7 @@ class MediaTrackSettings extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
   }
 
   componentDidMount() {
@@ -23,25 +22,25 @@ class MediaTrackSettings extends React.Component {
           {this.props.tracks.map(track => (
               <Table className="MediaTrackSettings" key={track.id}>
                 <tbody>
-                  <tr>
-                    <td colSpan={2} className="text-left">{track.kind} settings</td>
-                  </tr>
-                  <tr>
-                    <td>Label</td>
-                    <td>{track.label}</td>
-                  </tr>
-                  <tr>
-                    <td>Enabled</td>
-                    <td>{track.enabled.toString()}</td>
-                  </tr>
+                <tr>
+                  <td colSpan={2} className="text-left">{track.kind} settings</td>
+                </tr>
+                <tr>
+                  <td>Label</td>
+                  <td>{track.label}</td>
+                </tr>
+                <tr>
+                  <td>Enabled</td>
+                  <td>{track.enabled.toString()}</td>
+                </tr>
                 </tbody>
 
                 {Object.keys(track.getSettings()).map(keyName => (
                     <tbody key={keyName}>
-                      <tr>
-                        <td>{keyName}:</td>
-                        <td>{track.getSettings()[keyName]}</td>
-                      </tr>
+                    <tr>
+                      <td>{keyName}:</td>
+                      <td>{track.getSettings()[keyName]}</td>
+                    </tr>
                     </tbody>
                 ))}
               </Table>

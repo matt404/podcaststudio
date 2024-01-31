@@ -9,8 +9,12 @@ import ProjectList from "./project/ProjectList";
 import ProjectTracksView from "./track/ProjectTracksView";
 import Database from '../util/Database.js';
 import Footer from "./Footer";
+import WelcomeMessage from "./documentation/WelcomeMessage";
+
+const showModalStorageKey = 'WelcomeMessage.showWelcomeMessage';
 
 class App extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -22,6 +26,7 @@ class App extends Component {
       projectTracks: [],
       recording: false,
       selectedProject: null,
+      showWelcomeMessage: localStorage.getItem(showModalStorageKey) !== 'false',
       streaming: false,
       streamingDisplayMedia: false,
       supportedConstraints: {},
@@ -41,6 +46,7 @@ class App extends Component {
     this.openProject = this.openProject.bind(this);
     this.saveTrackToProject = this.saveTrackToProject.bind(this);
     this.setProjectInfo = this.setProjectInfo.bind(this);
+    this.toggleShowWelcomeMessage = this.toggleShowWelcomeMessage.bind(this);
     this.setSelectedDeviceTracks = this.setSelectedDeviceTracks.bind(this);
     this.startStreamingDisplayMedia = this.startStreamingDisplayMedia.bind(this);
     this.stopStreamingDisplayMedia = this.stopStreamingDisplayMedia.bind(this);
@@ -55,13 +61,13 @@ class App extends Component {
     this.fetchDevices();
     await this.database.openDatabase();
     this.initializeProjectState();
-    const supportedConstraints= navigator.mediaDevices.getSupportedConstraints();
+    const supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
     this.setState({
       supportedConstraints: supportedConstraints
     });
   }
 
-  createNewProject(){
+  createNewProject() {
     const newId = Database.generateUUID();
     const newProject = new Project(newId, 'Project ' + (this.state.projects.length + 1), 'Project Description');
     this.database.addProject(newProject, () => {
@@ -69,8 +75,8 @@ class App extends Component {
     });
   }
 
-  deleteProject(projectId){
-    if(this.state.recording){
+  deleteProject(projectId) {
+    if (this.state.recording) {
       return;
     }
     this.database.deleteProject(projectId);
@@ -78,11 +84,11 @@ class App extends Component {
       this.setState({
         projects: projects,
         selectedProject: projects[0],
-      },this.loadProjectTracks);
+      }, this.loadProjectTracks);
     });
   }
 
-  deleteProjectTrack(trackId){
+  deleteProjectTrack(trackId) {
     let projects = Array.from(this.state.projects);
     let selectedProject = projects.find(project => project.id === this.state.selectedProject.id);
     selectedProject.trackIds = selectedProject.trackIds.filter(track => track !== trackId);
@@ -91,13 +97,13 @@ class App extends Component {
     this.setState({
       projects: projects,
       selectedProject: selectedProject,
-    },this.loadProjectTracks);
+    }, this.loadProjectTracks);
   }
 
-  async exportProjectToVideoFile(){
+  async exportProjectToVideoFile() {
     const selectedTracks = this.getSelectedTracks();
-    if(selectedTracks.length > 0){
-      const blob = new Blob(selectedTracks.map(track => track.blob), { type: selectedTracks[0].mediaType });
+    if (selectedTracks.length > 0) {
+      const blob = new Blob(selectedTracks.map(track => track.blob), {type: selectedTracks[0].mediaType});
       const dataUrl = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = dataUrl;
@@ -120,7 +126,7 @@ class App extends Component {
     }
   };
 
-  getSelectedTracks(){
+  getSelectedTracks() {
     const selectedTracks = [];
     const selectedTrackIds = Array.from(document.getElementsByName('projectTracks'))
         .filter(element => element.checked).map(element => element.value);
@@ -130,28 +136,28 @@ class App extends Component {
     return selectedTracks;
   }
 
-  initializeProjectState(){
+  initializeProjectState() {
     this.database.getAllProjects((projects) => {
-      if(projects.length > 0){
+      if (projects.length > 0) {
         this.setState({
           projects: projects,
           selectedProject: projects[0],
-        },()=>{
+        }, () => {
           this.loadProjectTracks();
         });
-      }else{
+      } else {
         this.createNewProject();
       }
     });
   }
 
-  loadProjectTracks(){
-    if(this.state.selectedProject){
-      if(this.state.selectedProject.trackIds.length === 0){
+  loadProjectTracks() {
+    if (this.state.selectedProject) {
+      if (this.state.selectedProject.trackIds.length === 0) {
         this.setState({
           projectTracks: [],
         });
-      }else{
+      } else {
         this.database.getTracks(this.state.selectedProject.trackIds, (projectTracks) => {
           this.setState({
             projectTracks: projectTracks,
@@ -161,42 +167,42 @@ class App extends Component {
     }
   }
 
-  moveProjectTrackDown(trackIndex){
+  moveProjectTrackDown(trackIndex) {
     let projects = Array.from(this.state.projects);
     let selectedProject = projects.find(project => project.id === this.state.selectedProject.id);
     const trackId = selectedProject.trackIds[trackIndex];
     selectedProject.trackIds.splice(trackIndex, 1);
-    selectedProject.trackIds.splice(trackIndex+1, 0, trackId);
+    selectedProject.trackIds.splice(trackIndex + 1, 0, trackId);
     this.database.updateProject(selectedProject);
     this.setState({
       projects: projects,
       selectedProject: selectedProject,
-    },this.loadProjectTracks);
+    }, this.loadProjectTracks);
   }
 
-  moveProjectTrackUp(trackIndex){
+  moveProjectTrackUp(trackIndex) {
     let projects = Array.from(this.state.projects);
     let selectedProject = projects.find(project => project.id === this.state.selectedProject.id);
     const trackId = selectedProject.trackIds[trackIndex];
     selectedProject.trackIds.splice(trackIndex, 1);
-    selectedProject.trackIds.splice(trackIndex-1, 0, trackId);
+    selectedProject.trackIds.splice(trackIndex - 1, 0, trackId);
     this.database.updateProject(selectedProject);
     this.setState({
       projects: projects,
       selectedProject: selectedProject,
-    },this.loadProjectTracks);
+    }, this.loadProjectTracks);
   }
 
-  openProject(project){
-    if(this.state.recording){
-        return;
+  openProject(project) {
+    if (this.state.recording) {
+      return;
     }
     this.setState({
       selectedProject: project,
-    },this.loadProjectTracks);
+    }, this.loadProjectTracks);
   }
 
-  saveTrackToProject(track){
+  saveTrackToProject(track) {
     let projects = Array.from(this.state.projects);
     let selectedProject = projects.find(project => project.id === this.state.selectedProject.id);
     selectedProject.trackIds.push(track.id);
@@ -205,10 +211,10 @@ class App extends Component {
     this.setState({
       projects: projects,
       selectedProject: selectedProject,
-    },this.loadProjectTracks);
+    }, this.loadProjectTracks);
   }
 
-  setProjectInfo(projectInfo){
+  setProjectInfo(projectInfo) {
     let projects = Array.from(this.state.projects);
     let selectedProject = projects.find(project => project.id === this.state.selectedProject.id);
     selectedProject.name = projectInfo.projectName;
@@ -220,45 +226,45 @@ class App extends Component {
     });
   }
 
-  setSelectedDeviceTracks(selectedDeviceTracks){
+  setSelectedDeviceTracks(selectedDeviceTracks) {
     console.log(selectedDeviceTracks);
     this.selectedDeviceTracks = selectedDeviceTracks;
   }
 
-  startStreamingDisplayMedia(){
-    this.setState({ streamingDisplayMedia: true });
+  startStreamingDisplayMedia() {
+    this.setState({streamingDisplayMedia: true});
   }
 
-  stopStreamingDisplayMedia(){
+  stopStreamingDisplayMedia() {
     this.selectedDeviceTracks = [];
     this.setState({
       streamingDisplayMedia: false
     });
   }
 
-  startRecording(){
-    this.setState({ recording: true });
+  startRecording() {
+    this.setState({recording: true});
   }
 
-  stopRecording(){
-    this.setState({ recording: false });
+  stopRecording() {
+    this.setState({recording: false});
   }
 
-  startStreaming(){
-    this.setState({ streaming: true });
+  startStreaming() {
+    this.setState({streaming: true});
   }
 
-  stopStreaming(){
+  stopStreaming() {
     this.selectedDeviceTracks = [];
     this.setState({
       streaming: false
     });
   }
 
-  toggleFooter(){
+  toggleFooter() {
     let bodyClassName = 'App-body-footer-open';
     let footerClassName = 'App-footer-open';
-    if (this.state.footerClassName === 'App-footer-open'){
+    if (this.state.footerClassName === 'App-footer-open') {
       bodyClassName = 'App-body-footer-closed';
       footerClassName = 'App-footer-closed';
     }
@@ -268,67 +274,81 @@ class App extends Component {
     });
   }
 
+  toggleShowWelcomeMessage() {
+    const showWelcomeMessage = !this.state.showWelcomeMessage;
+    this.setState({showWelcomeMessage: showWelcomeMessage}, () => {
+      localStorage.setItem(showModalStorageKey, showWelcomeMessage.toString());
+    });
+  }
+
   render() {
     return (
-        <Container className="vh-100 mw-100 d-flex flex-column">
-          <Row>
-            <Col xl={12} className="App-header">
-              <MainNavBar
-                  createNewProject={this.createNewProject}
-                  recording={this.state.recording}
-                  streaming={this.state.streaming}
-                  streamingDisplayMedia={this.state.streamingDisplayMedia}
-                  exportProjectToVideoFile={this.exportProjectToVideoFile}/></Col>
-          </Row>
-          <Row className={this.state.bodyClassName}>
-            <Col className="App-menu" xl={3} lg={3} md={3} sm={4}>
-              <ProjectInfo
-                  project={this.state.selectedProject}
-                  setProjectInfo={this.setProjectInfo}/>
-            </Col>
-            <Col className="App-body" xl={6} lg={5} md={5} sm={5}>
-              <AVTrack
-                  devices={this.state.devices}
-                  project={this.state.selectedProject}
-                  recording={this.state.recording}
-                  streaming={this.state.streaming}
-                  streamingDisplayMedia={this.state.streamingDisplayMedia}
-                  selectedDeviceTracks={this.selectedDeviceTracks}
-                  saveTrackToProject={this.saveTrackToProject}
-                  setSelectedDeviceTracks={this.setSelectedDeviceTracks}
-                  startStreamingDisplayMedia={this.startStreamingDisplayMedia}
-                  stopStreamingDisplayMedia={this.stopStreamingDisplayMedia}
-                  startRecording={this.startRecording}
-                  stopRecording={this.stopRecording}
-                  startStreaming={this.startStreaming}
-                  stopStreaming={this.stopStreaming} />
-              <ProjectTracksView
-                  deleteProjectTrack={this.deleteProjectTrack}
-                  moveProjectTrackDown={this.moveProjectTrackDown}
-                  moveProjectTrackUp={this.moveProjectTrackUp}
-                  project={this.state.selectedProject}
-                  projectTracks={this.state.projectTracks}/>
-            </Col>
-            <Col className="App-rightPane" xl={3} lg={4} md={4} sm={3}>
-              <ProjectList
-                  deleteProject={this.deleteProject}
-                  openProject={this.openProject}
-                  projects={this.state.projects}
-                  selectedProject={this.state.selectedProject}/>
-            </Col>
-          </Row>
-          <Row>
-            <Col className={this.state.footerClassName} xl={12}>
-              <Footer
-                  devices={this.state.devices}
-                  footerOpen={this.state.footerClassName === 'App-footer-open'}
-                  selectedDeviceTracks={this.selectedDeviceTracks}
-                  supportedConstraints={this.state.supportedConstraints}
-                  toggleFooter={this.toggleFooter}
-                  />
-            </Col>
-          </Row>
-        </Container>
+        <>
+          <WelcomeMessage
+              showWelcomeMessage={this.state.showWelcomeMessage}
+              toggleShowWelcomeMessage={this.toggleShowWelcomeMessage}/>
+          <Container className="vh-100 mw-100 d-flex flex-column">
+            <Row>
+              <Col xl={12} className="App-header">
+                <MainNavBar
+                    createNewProject={this.createNewProject}
+                    exportProjectToVideoFile={this.exportProjectToVideoFile}
+                    recording={this.state.recording}
+                    streaming={this.state.streaming}
+                    streamingDisplayMedia={this.state.streamingDisplayMedia}
+                    toggleShowWelcomeMessage={this.toggleShowWelcomeMessage}
+                /></Col>
+            </Row>
+            <Row className={this.state.bodyClassName}>
+              <Col className="App-menu" xl={3} lg={3} md={3} sm={4}>
+                <ProjectInfo
+                    project={this.state.selectedProject}
+                    setProjectInfo={this.setProjectInfo}/>
+              </Col>
+              <Col className="App-body" xl={6} lg={5} md={5} sm={5}>
+                <AVTrack
+                    devices={this.state.devices}
+                    project={this.state.selectedProject}
+                    recording={this.state.recording}
+                    streaming={this.state.streaming}
+                    streamingDisplayMedia={this.state.streamingDisplayMedia}
+                    selectedDeviceTracks={this.selectedDeviceTracks}
+                    saveTrackToProject={this.saveTrackToProject}
+                    setSelectedDeviceTracks={this.setSelectedDeviceTracks}
+                    startStreamingDisplayMedia={this.startStreamingDisplayMedia}
+                    stopStreamingDisplayMedia={this.stopStreamingDisplayMedia}
+                    startRecording={this.startRecording}
+                    stopRecording={this.stopRecording}
+                    startStreaming={this.startStreaming}
+                    stopStreaming={this.stopStreaming}/>
+                <ProjectTracksView
+                    deleteProjectTrack={this.deleteProjectTrack}
+                    moveProjectTrackDown={this.moveProjectTrackDown}
+                    moveProjectTrackUp={this.moveProjectTrackUp}
+                    project={this.state.selectedProject}
+                    projectTracks={this.state.projectTracks}/>
+              </Col>
+              <Col className="App-rightPane" xl={3} lg={4} md={4} sm={3}>
+                <ProjectList
+                    deleteProject={this.deleteProject}
+                    openProject={this.openProject}
+                    projects={this.state.projects}
+                    selectedProject={this.state.selectedProject}/>
+              </Col>
+            </Row>
+            <Row>
+              <Col className={this.state.footerClassName} xl={12}>
+                <Footer
+                    devices={this.state.devices}
+                    footerOpen={this.state.footerClassName === 'App-footer-open'}
+                    selectedDeviceTracks={this.selectedDeviceTracks}
+                    supportedConstraints={this.state.supportedConstraints}
+                    toggleFooter={this.toggleFooter}
+                />
+              </Col>
+            </Row>
+          </Container>
+        </>
     );
   }
 }

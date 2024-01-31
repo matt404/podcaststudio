@@ -1,13 +1,14 @@
-.ProjectListBadge{
-    float:right;
+.ProjectListBadge {
+  float: right;
 }
 
-td.ProjectListDisplay{
-    cursor: pointer;
-    color: #c0c0c0;
+td.ProjectListDisplay {
+  cursor: pointer;
+  color: #c0c0c0;
 }
-td.ProjectListDisplaySelected{
-     cursor: pointer;
-     color: #7994cc;
-     font-weight: bold;
- }
+
+td.ProjectListDisplaySelected {
+  cursor: pointer;
+  color: #7994cc;
+  font-weight: bold;
+}
