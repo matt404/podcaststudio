@@ -1,11 +1,11 @@
 import './Footer.css';
-import {Component} from 'react';
+import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import {Tab, Tabs, Button} from "react-bootstrap";
-import ListAllDevices from "./ListAllDevices";
-import ListAllSupportedConstraints from "./ListAllSupportedConstraints";
-import MediaTrackSettings from "./MediaTrackSettings";
-import {FaAngleDown, FaAngleUp} from "react-icons/fa";
+import ListAllDevices from "./media/ListAllDevices";
+import ListAllSupportedConstraints from "./media/ListAllSupportedConstraints";
+import MediaTrackSettings from "./media/MediaTrackSettings";
+import {FaAngleDoubleDown, FaAngleDoubleUp } from "react-icons/fa";
 
 class Footer extends Component{
   static propTypes = {
@@ -23,7 +23,7 @@ class Footer extends Component{
   }
 
   render(){
-      const footerIcon = !this.props.footerOpen ? <FaAngleUp /> : <FaAngleDown />;
+      const footerIcon = !this.props.footerOpen ? <FaAngleDoubleUp /> : <FaAngleDoubleDown />;
         return (
             <footer>
               <Button className="footer-toggle"

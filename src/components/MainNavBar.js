@@ -2,7 +2,7 @@ import navlogo from '../navlogo.png';
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import {Button, Container, Form, Nav, Navbar, NavDropdown} from "react-bootstrap";
-import TimerClock from "./TimerClock";
+import TimerClock from "./track/TimerClock";
 import {FaCloudUploadAlt, FaFileExport, FaFileVideo} from "react-icons/fa";
 
 class MainNavBar extends Component {

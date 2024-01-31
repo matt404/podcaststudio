@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {Button, Table} from "react-bootstrap";
 import PropTypes from "prop-types";
 import {FaArrowDown, FaArrowUp, FaDownload, FaRegTrashAlt} from "react-icons/fa";
-import MediaFileUtil from "../util/MediaFileUtil";
+import MediaFileUtil from "../../util/MediaFileUtil";
 
 class ProjectTracksView extends Component {
     static propTypes = {
@@ -55,12 +55,12 @@ class ProjectTracksView extends Component {
                     <div id="TotalTrackSize">Total Size: {this.sumBlobSize(this.props.projectTracks)}</div>
                     <div id="TotalTrackDuration">Total Runtime: {this.sumDuration(this.props.projectTracks)}</div>
                 </div>
-                <Table striped bordered hover variant="dark">
+                <Table variant={"dark"} striped bordered hover>
                 <thead>
                 <tr>
                     <th>&nbsp;</th>
                     <th>Track Name</th>
-                    <th>Track Duration</th>
+                    <th>Duration</th>
                     <th>Size</th>
                     <th>Preview</th>
                     <th>&nbsp;</th>

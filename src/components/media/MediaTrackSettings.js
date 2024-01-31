@@ -21,7 +21,7 @@ class MediaTrackSettings extends React.Component {
     return (
         <div className="MediaTrackSettings">
           {this.props.tracks.map(track => (
-              <Table className="MediaTrackSettings" variant="dark" key={track.id}>
+              <Table className="MediaTrackSettings" key={track.id}>
                 <tbody>
                   <tr>
                     <td colSpan={2} className="text-left">{track.kind} settings</td>

@@ -1,6 +1,6 @@
 import './ProjectList.css'
 import React, { Component } from 'react';
-import {Button, Table} from "react-bootstrap";
+import {Badge, Button, Table} from "react-bootstrap";
 import PropTypes from "prop-types";
 import {FaRegTrashAlt} from "react-icons/fa";
 
@@ -21,10 +21,10 @@ class ProjectList extends Component {
     render() {
         return (
             <div>
-                <Table striped bordered hover variant="dark">
+                <Table variant={"dark"} striped bordered hover>
                     <thead>
                     <tr>
-                        <th>Project Name</th>
+                        <th>Projects</th>
                         <th>&nbsp;</th>
                     </tr>
                     </thead>
@@ -36,8 +36,9 @@ class ProjectList extends Component {
                         return (
                             <tbody key={project.id}>
                             <tr>
-                                <td onClick={()=>{this.props.openProject(project)}} className={projectClass}>{project.name}</td>
-                                <td align={"right"}><Button variant="dark" onClick={()=>{this.props.deleteProject(project.id)}}><FaRegTrashAlt/></Button></td>
+                                <td onClick={()=>{this.props.openProject(project)}} className={projectClass}>{project.name}
+                                    <Badge title={"Project Track Count"} className="ProjectListBadge" bg="secondary" pill>{project.trackIds.length}</Badge></td>
+                                <td align={"right"}><Button variant={"dark"} onClick={()=>{this.props.deleteProject(project.id)}}><FaRegTrashAlt/></Button></td>
                             </tr>
                             </tbody>
                         );

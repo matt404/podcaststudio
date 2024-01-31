@@ -1,3 +1,7 @@
+.ProjectListBadge{
+    float:right;
+}
+
 td.ProjectListDisplay{
     cursor: pointer;
     color: #c0c0c0;

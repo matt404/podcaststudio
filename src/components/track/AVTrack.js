@@ -1,12 +1,12 @@
 import './AVTrack.css';
-import Track from '../model/Track.js';
+import Track from '../../model/Track.js';
 import React, {Component} from 'react';
 import AudioVisualizer from "./AudioVisualizer";
 import {Button, Table} from "react-bootstrap";
 import VideoComponent from "./VideoComponent";
 import PropTypes from "prop-types";
-import MediaFileUtil from "../util/MediaFileUtil";
-import Database from "../util/Database";
+import MediaFileUtil from "../../util/MediaFileUtil";
+import Database from "../../util/Database";
 import {FaCircle, FaPlay, FaSquare} from "react-icons/fa";
 
 class AVTrack extends Component {
@@ -224,7 +224,7 @@ class AVTrack extends Component {
 
   render() {
     return (
-        <Table className="AVTrack" variant="dark">
+        <Table className="AVTrack">
           <tbody>
           <tr>
             <td className="VideoCell"><VideoComponent

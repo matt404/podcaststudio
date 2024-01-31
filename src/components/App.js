@@ -2,11 +2,11 @@ import './App.css';
 import Project from '../model/Project.js';
 import React, {Component} from "react";
 import {Container, Row, Col} from "react-bootstrap";
-import AVTrack from "./AVTrack";
-import ProjectInfo from "./ProjectInfo";
+import AVTrack from "./track/AVTrack";
+import ProjectInfo from "./project/ProjectInfo";
 import MainNavBar from "./MainNavBar";
-import ProjectList from "./ProjectList";
-import ProjectTracksView from "./ProjectTracksView";
+import ProjectList from "./project/ProjectList";
+import ProjectTracksView from "./track/ProjectTracksView";
 import Database from '../util/Database.js';
 import Footer from "./Footer";
 
@@ -70,6 +70,9 @@ class App extends Component {
   }
 
   deleteProject(projectId){
+    if(this.state.recording){
+      return;
+    }
     this.database.deleteProject(projectId);
     this.database.getAllProjects((projects) => {
       this.setState({
@@ -185,7 +188,7 @@ class App extends Component {
   }
 
   openProject(project){
-    if(this.state.streaming || this.state.streamingDisplayMedia || this.state.recording){
+    if(this.state.recording){
         return;
     }
     this.setState({
@@ -283,7 +286,7 @@ class App extends Component {
                   project={this.state.selectedProject}
                   setProjectInfo={this.setProjectInfo}/>
             </Col>
-            <Col className="App-body" xl={7} lg={6} md={6} sm={5}>
+            <Col className="App-body" xl={6} lg={5} md={5} sm={5}>
               <AVTrack
                   devices={this.state.devices}
                   project={this.state.selectedProject}
@@ -306,7 +309,7 @@ class App extends Component {
                   project={this.state.selectedProject}
                   projectTracks={this.state.projectTracks}/>
             </Col>
-            <Col className="App-rightPane" xl={2} lg={3} md={3} sm={3}>
+            <Col className="App-rightPane" xl={3} lg={4} md={4} sm={3}>
               <ProjectList
                   deleteProject={this.deleteProject}
                   openProject={this.openProject}
