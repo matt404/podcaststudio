@@ -81,5 +81,15 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 ## Docker Commands
 
+#### Build Docker Image
+For ARM:
+docker buildx build --platform linux/arm64/v8 -t matt404/podcaststudio .
+
+For x86:
+docker build -t matt404/podcaststudio .
+
+#### Run Docker Image
+docker run -p 8080:80 matt404/podcaststudio:latest
+
 #### Reset Docker Buildx
 docker run --rm --privileged multiarch/qemu-user-static --reset -p yes

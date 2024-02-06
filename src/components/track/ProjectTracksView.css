@@ -26,3 +26,24 @@ td.track-preview video {
 td.track-preview button.padRight {
   margin-right: 10px;
 }
+
+
+.track-checklist {
+  width: 20px;
+}
+.track-name {
+  width: auto;
+  min-width: 200px;
+}
+.track-duration {
+  width: 130px;
+}
+.track-size {
+  width: 130px;
+}
+.track-preview {
+  width: 150px;
+}
+.track-buttons {
+  width: 190px;
+}

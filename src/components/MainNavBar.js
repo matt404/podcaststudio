@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import {Button, Container, Form, Nav, Navbar, NavDropdown} from "react-bootstrap";
 import TimerClock from "./track/TimerClock";
-import {FaCloudUploadAlt, FaFileExport, FaFileVideo} from "react-icons/fa";
+import {FaCloudUploadAlt, FaFileExport, FaFileVideo, FaRegCommentAlt} from "react-icons/fa";
 
 class MainNavBar extends Component {
   static propTypes = {
@@ -70,7 +70,7 @@ class MainNavBar extends Component {
                   }}><FaCloudUploadAlt/> Upload</NavDropdown.Item>
                 </NavDropdown>
                 <NavDropdown title="Help" id="navbarScrollingDropdown">
-                  <NavDropdown.Item onClick={this.props.toggleShowWelcomeMessage}><FaFileVideo/> Welcome</NavDropdown.Item>
+                  <NavDropdown.Item onClick={this.props.toggleShowWelcomeMessage}><FaRegCommentAlt/> Welcome</NavDropdown.Item>
                 </NavDropdown>
               </Nav>
               <Form className="d-flex">

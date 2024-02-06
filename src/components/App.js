@@ -55,6 +55,7 @@ class App extends Component {
     this.startStreaming = this.startStreaming.bind(this);
     this.stopStreaming = this.stopStreaming.bind(this);
     this.toggleFooter = this.toggleFooter.bind(this);
+    this.updateProjectTrackName = this.updateProjectTrackName.bind(this);
   }
 
   async componentDidMount() {
@@ -281,6 +282,17 @@ class App extends Component {
     });
   }
 
+  updateProjectTrackName(trackId, trackName) {
+    console.log("updateProjectTrackName: " + trackName);
+    let projectTracks = Array.from(this.state.projectTracks);
+    let selectedProjectTrack = projectTracks.find(track => track.id === trackId);
+    selectedProjectTrack.name = trackName;
+    this.database.updateTrack(selectedProjectTrack);
+    this.setState({
+      projectTracks: projectTracks,
+    }, this.loadProjectTracks);
+  }
+
   render() {
     return (
         <>
@@ -326,7 +338,7 @@ class App extends Component {
                     moveProjectTrackDown={this.moveProjectTrackDown}
                     moveProjectTrackUp={this.moveProjectTrackUp}
                     project={this.state.selectedProject}
-                    projectTracks={this.state.projectTracks}/>
+                    projectTracks={this.state.projectTracks} updateProjectTrackName={this.updateProjectTrackName}/>
               </Col>
               <Col className="App-rightPane" xl={3} lg={4} md={4} sm={3}>
                 <ProjectList
