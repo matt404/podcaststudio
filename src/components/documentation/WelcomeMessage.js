@@ -18,7 +18,7 @@ class WelcomeMessage extends Component {
   render() {
     return (
       <Modal
-          dialogClassName="welcome-modal"
+          dialogClassName={"welcome-modal-dialog"}
           show={this.props.showWelcomeMessage}
           backdrop="static"
           keyboard={false}>
