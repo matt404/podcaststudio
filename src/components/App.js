@@ -29,6 +29,7 @@ class App extends Component {
       showWelcomeMessage: localStorage.getItem(showModalStorageKey) !== 'false',
       streaming: false,
       streamingDisplayMedia: false,
+      streamingPip: false,
       supportedConstraints: {},
     };
     this.database = new Database();
@@ -48,12 +49,14 @@ class App extends Component {
     this.setProjectInfo = this.setProjectInfo.bind(this);
     this.toggleShowWelcomeMessage = this.toggleShowWelcomeMessage.bind(this);
     this.setSelectedDeviceTracks = this.setSelectedDeviceTracks.bind(this);
-    this.startStreamingDisplayMedia = this.startStreamingDisplayMedia.bind(this);
-    this.stopStreamingDisplayMedia = this.stopStreamingDisplayMedia.bind(this);
     this.startRecording = this.startRecording.bind(this);
     this.stopRecording = this.stopRecording.bind(this);
     this.startStreaming = this.startStreaming.bind(this);
     this.stopStreaming = this.stopStreaming.bind(this);
+    this.startStreamingDisplayMedia = this.startStreamingDisplayMedia.bind(this);
+    this.stopStreamingDisplayMedia = this.stopStreamingDisplayMedia.bind(this);
+    this.startStreamingPip = this.startStreamingPip.bind(this);
+    this.stopStreamingPip = this.stopStreamingPip.bind(this);
     this.toggleFooter = this.toggleFooter.bind(this);
     this.updateProjectTrackName = this.updateProjectTrackName.bind(this);
   }
@@ -258,8 +261,17 @@ class App extends Component {
   stopStreaming() {
     this.selectedDeviceTracks = [];
     this.setState({
-      streaming: false
+      streaming: false,
+      streamingPip: false
     });
+  }
+
+  startStreamingPip() {
+    this.setState({streamingPip: true});
+  }
+
+  stopStreamingPip() {
+    this.setState({streamingPip: false});
   }
 
   toggleFooter() {
@@ -324,15 +336,18 @@ class App extends Component {
                     recording={this.state.recording}
                     streaming={this.state.streaming}
                     streamingDisplayMedia={this.state.streamingDisplayMedia}
+                    streamingPip={this.state.streamingPip}
                     selectedDeviceTracks={this.selectedDeviceTracks}
                     saveTrackToProject={this.saveTrackToProject}
                     setSelectedDeviceTracks={this.setSelectedDeviceTracks}
+                    startStreaming={this.startStreaming}
+                    stopStreaming={this.stopStreaming}
                     startStreamingDisplayMedia={this.startStreamingDisplayMedia}
                     stopStreamingDisplayMedia={this.stopStreamingDisplayMedia}
+                    startStreamingPip={this.startStreamingPip}
+                    stopStreamingPip={this.stopStreamingPip}
                     startRecording={this.startRecording}
-                    stopRecording={this.stopRecording}
-                    startStreaming={this.startStreaming}
-                    stopStreaming={this.stopStreaming}/>
+                    stopRecording={this.stopRecording}/>
                 <ProjectTracksView
                     deleteProjectTrack={this.deleteProjectTrack}
                     moveProjectTrackDown={this.moveProjectTrackDown}

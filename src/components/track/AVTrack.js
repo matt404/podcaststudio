@@ -16,11 +16,14 @@ class AVTrack extends Component {
     recording: PropTypes.bool,
     streaming: PropTypes.bool,
     streamingDisplayMedia: PropTypes.bool,
+    streamingPip: PropTypes.bool,
     saveTrackToProject: PropTypes.func,
     selectedDeviceTracks: PropTypes.array,
     setSelectedDeviceTracks: PropTypes.func,
     startDisplayMediaStreams: PropTypes.func,
     stopDisplayMediaStreams: PropTypes.func,
+    startStreamingPip: PropTypes.func,
+    stopStreamingPip: PropTypes.func,
     startRecording: PropTypes.func,
     stopRecording: PropTypes.func,
     startStreaming: PropTypes.func,
@@ -38,6 +41,7 @@ class AVTrack extends Component {
     this.recordedChunks = [];
     this.recordedMediaType = '';
     this.videoRef = React.createRef();
+    this.videoPipRef = React.createRef();
     this.mediaRecorderRef = React.createRef();
 
     this.handleAudioDeviceChange = this.handleAudioDeviceChange.bind(this);
@@ -46,6 +50,7 @@ class AVTrack extends Component {
     this.startDisplayMediaStreams = this.startDisplayMediaStreams.bind(this);
     this.stopDisplayMediaStreams = this.stopDisplayMediaStreams.bind(this);
     this.startAVStreams = this.startAVStreams.bind(this);
+    this.startPipStreams = this.startPipStreams.bind(this);
     this.startRecording = this.startRecording.bind(this);
     this.stopAVStreams = this.stopAVStreams.bind(this);
     this.stopRecording = this.stopRecording.bind(this);
@@ -196,7 +201,6 @@ class AVTrack extends Component {
       console.error('Error accessing AV streams:', error);
     }
   }
-
   stopAVStreams = () => {
     if (this.videoRef.current && this.videoRef.current.srcObject) {
       try {
@@ -212,6 +216,59 @@ class AVTrack extends Component {
     }
     this.props.stopStreaming();
   };
+
+  startPipStreams = async () => {
+    try {
+      //https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints
+      const constraints = {
+        audio: {
+          autoGainControl: false,
+          channelCount: 1,
+          deviceId: {
+            exact: this.state.selectedAudioDeviceId,
+          },
+          echoCancellation: false,
+          noiseSuppression: false,
+          // sampleRate: 44100,
+          // sampleSize: 16,
+        },
+        video: {
+          // aspectRatio: ,
+          deviceId: {
+            exact: this.state.selectedVideoDeviceId,
+          },
+          frameRate: 15,
+          width: 1280,
+          height: 720,
+          resizeMode: "none",
+        }
+      };
+      await navigator.mediaDevices.getUserMedia(constraints)
+          .then(stream => {
+            this.videoPipRef.current.srcObject = stream;
+            this.videoPipRef.current.onloadedmetadata = () => {
+              try {
+                this.videoPipRef.current.requestPictureInPicture();
+              } catch (error) {
+                console.error('Error starting Pip:', error);
+              }
+            }
+          });
+      this.props.startStreamingPip();
+    } catch (error) {
+      console.error('Error accessing Pip streams:', error);
+    }
+  }
+
+  stopPipStreams = () => {
+    document.exitPictureInPicture()
+        .then(() => {
+        })
+        .catch((error) => {
+          console.error('Error stopping Pip:', error);
+        });
+    this.props.stopStreamingPip();
+  }
 
   handleAudioDeviceChange = (event) => {
     const newDeviceId = event.target.value;
@@ -243,6 +300,7 @@ class AVTrack extends Component {
           <tr>
             <td colSpan={2}>
               <div>
+                <video ref={this.videoPipRef} className="displayNone" autoPlay ></video>
                 <Button
                     variant="primary"
                     onClick={this.startDisplayMediaStreams}
@@ -272,6 +330,18 @@ class AVTrack extends Component {
                     className={!this.props.streaming
                     || this.props.recording
                         ? 'displayNone' : ''}><FaSquare/> Stop AV Streams
+                </Button>
+                <Button
+                    variant="primary"
+                    onClick={this.startPipStreams}
+                    className={!this.props.streamingDisplayMedia || this.props.streamingPip
+                        ? 'displayNone' : ''}><FaPlay/> Start Picture-in-Picture
+                </Button>
+                <Button
+                    variant="warning"
+                    onClick={this.stopPipStreams}
+                    className={!this.props.streamingPip
+                        ? 'displayNone' : ''}><FaSquare/> Stop Picture-in-Picture
                 </Button>
                 <Button
                     variant="danger"
