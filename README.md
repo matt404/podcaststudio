@@ -3,9 +3,10 @@
 This project was created to give podcasters the necessary tools to create new audio/video content.
 
 #### Project Goals
-1) Deliver a 100% web based solution
-2) Record video and audio from any input source (current state)
-3) Compose a single media output from multiple recordings (future state)
+1) Deliver a 100% offline capable solution
+2) Record Audio/Video/Display from any input source
+3) Deliver Editing, Mixing, and Composition capabilities
+4) Compose a single media output from multiple recordings (future state)
 
 ## Screenshots
 
