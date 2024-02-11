@@ -44,6 +44,7 @@ class AVTrack extends Component {
     this.videoPipRef = React.createRef();
     this.mediaRecorderRef = React.createRef();
 
+    this.clearTracksFromVideoRef = this.clearTracksFromVideoRef.bind(this);
     this.handleAudioDeviceChange = this.handleAudioDeviceChange.bind(this);
     this.handleDataAvailable = this.handleDataAvailable.bind(this);
     this.handleVideoDeviceChange = this.handleVideoDeviceChange.bind(this);
@@ -76,6 +77,16 @@ class AVTrack extends Component {
       if (updateState) {
         this.setState(devices);
       }
+    }
+  }
+
+  clearTracksFromVideoRef = (videoRef) => {
+    if (videoRef && videoRef.current && videoRef.current.srcObject) {
+      videoRef.current.srcObject.getTracks()
+          .forEach(track => {
+            track.stop();
+            videoRef.current.srcObject.removeTrack(track);
+          });
     }
   }
 
@@ -204,11 +215,7 @@ class AVTrack extends Component {
   stopAVStreams = () => {
     if (this.videoRef.current && this.videoRef.current.srcObject) {
       try {
-        this.videoRef.current.srcObject.getTracks()
-            .forEach(track => {
-              track.stop();
-              this.videoRef.current.srcObject.removeTrack(track);
-            });
+        this.clearTracksFromVideoRef(this.videoRef);
 
       } catch (error) {
         console.error('Error stopping AV streams:', error);
@@ -267,6 +274,7 @@ class AVTrack extends Component {
         .catch((error) => {
           console.error('Error stopping Pip:', error);
         });
+    this.clearTracksFromVideoRef(this.videoPipRef);
     this.props.stopStreamingPip();
   }
 
@@ -300,7 +308,7 @@ class AVTrack extends Component {
           <tr>
             <td colSpan={2}>
               <div>
-                <video ref={this.videoPipRef} className="displayNone" autoPlay ></video>
+                <video ref={this.videoPipRef} className="displayNone" autoPlay></video>
                 <Button
                     variant="primary"
                     onClick={this.startDisplayMediaStreams}

@@ -261,8 +261,7 @@ class App extends Component {
   stopStreaming() {
     this.selectedDeviceTracks = [];
     this.setState({
-      streaming: false,
-      streamingPip: false
+      streaming: false
     });
   }
 
