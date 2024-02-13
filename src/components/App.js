@@ -10,6 +10,7 @@ import ProjectTracksView from "./track/ProjectTracksView";
 import Database from '../util/Database.js';
 import Footer from "./Footer";
 import WelcomeMessage from "./documentation/WelcomeMessage";
+import ProjectSelectionModal from "./project/ProjectSelectionModal";
 
 const showModalStorageKey = 'WelcomeMessage.showWelcomeMessage';
 
@@ -27,6 +28,7 @@ class App extends Component {
       recording: false,
       selectedProject: null,
       showWelcomeMessage: localStorage.getItem(showModalStorageKey) !== 'false',
+      showProjectSelectionModal: false,
       streaming: false,
       streamingDisplayMedia: false,
       streamingPip: false,
@@ -47,7 +49,6 @@ class App extends Component {
     this.openProject = this.openProject.bind(this);
     this.saveTrackToProject = this.saveTrackToProject.bind(this);
     this.setProjectInfo = this.setProjectInfo.bind(this);
-    this.toggleShowWelcomeMessage = this.toggleShowWelcomeMessage.bind(this);
     this.setSelectedDeviceTracks = this.setSelectedDeviceTracks.bind(this);
     this.startRecording = this.startRecording.bind(this);
     this.stopRecording = this.stopRecording.bind(this);
@@ -58,6 +59,8 @@ class App extends Component {
     this.startStreamingPip = this.startStreamingPip.bind(this);
     this.stopStreamingPip = this.stopStreamingPip.bind(this);
     this.toggleFooter = this.toggleFooter.bind(this);
+    this.toggleProjectSelectionModal = this.toggleProjectSelectionModal.bind(this);
+    this.toggleShowWelcomeMessage = this.toggleShowWelcomeMessage.bind(this);
     this.updateProjectTrackName = this.updateProjectTrackName.bind(this);
   }
 
@@ -286,6 +289,11 @@ class App extends Component {
     });
   }
 
+  toggleProjectSelectionModal() {
+    const showProjectSelectionModal = !this.state.showProjectSelectionModal;
+    this.setState({showProjectSelectionModal: showProjectSelectionModal});
+  }
+
   toggleShowWelcomeMessage() {
     const showWelcomeMessage = !this.state.showWelcomeMessage;
     this.setState({showWelcomeMessage: showWelcomeMessage}, () => {
@@ -310,6 +318,13 @@ class App extends Component {
           <WelcomeMessage
               showWelcomeMessage={this.state.showWelcomeMessage}
               toggleShowWelcomeMessage={this.toggleShowWelcomeMessage}/>
+          <ProjectSelectionModal
+              projects={this.state.projects}
+              selectedProject={this.state.selectedProject}
+              showProjectSelectionModal={this.state.showProjectSelectionModal}
+              deleteProject={this.deleteProject}
+              openProject={this.openProject}
+              toggleProjectSelectionModal={this.toggleProjectSelectionModal}/>
           <Container className="vh-100 mw-100 d-flex flex-column">
             <Row>
               <Col xl={12} className="App-header">
@@ -319,6 +334,7 @@ class App extends Component {
                     recording={this.state.recording}
                     streaming={this.state.streaming}
                     streamingDisplayMedia={this.state.streamingDisplayMedia}
+                    toggleProjectSelectionModal={this.toggleProjectSelectionModal}
                     toggleShowWelcomeMessage={this.toggleShowWelcomeMessage}
                 /></Col>
             </Row>
@@ -355,11 +371,7 @@ class App extends Component {
                     projectTracks={this.state.projectTracks} updateProjectTrackName={this.updateProjectTrackName}/>
               </Col>
               <Col className="App-rightPane" xl={3} lg={4} md={4} sm={3}>
-                <ProjectList
-                    deleteProject={this.deleteProject}
-                    openProject={this.openProject}
-                    projects={this.state.projects}
-                    selectedProject={this.state.selectedProject}/>
+                settings coming soon
               </Col>
             </Row>
             <Row>

@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import {Button, Container, Form, Nav, Navbar, NavDropdown} from "react-bootstrap";
 import TimerClock from "./track/TimerClock";
-import {FaCloudUploadAlt, FaFileExport, FaFileVideo, FaRegCommentAlt} from "react-icons/fa";
+import {FaCloudUploadAlt, FaFileExport, FaFileVideo, FaFolderOpen, FaRegCommentAlt} from "react-icons/fa";
 
 class MainNavBar extends Component {
   static propTypes = {
@@ -13,6 +13,7 @@ class MainNavBar extends Component {
     streaming: PropTypes.bool,
     streamingDisplayMedia: PropTypes.bool,
     toggleShowWelcomeMessage: PropTypes.func,
+    toggleProjectSelectionModal: PropTypes.func,
   }
 
   constructor(props) {
@@ -61,6 +62,8 @@ class MainNavBar extends Component {
               >
                 <NavDropdown title="Project" id="navbarScrollingDropdown">
                   <NavDropdown.Item onClick={this.props.createNewProject}><FaFileVideo/> New</NavDropdown.Item>
+                  <NavDropdown.Divider/>
+                  <NavDropdown.Item onClick={this.props.toggleProjectSelectionModal}><FaFolderOpen/> Open</NavDropdown.Item>
                   <NavDropdown.Divider/>
                   <NavDropdown.Item
                       onClick={this.props.exportProjectToVideoFile}><FaFileExport/> Export</NavDropdown.Item>
