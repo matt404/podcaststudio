@@ -14,28 +14,26 @@ class ListAllDevices extends Component {
     this.state = {};
   }
 
-  componentDidMount() {
-  }
-
   render() {
     return (
         <div className="devicesContainer">
           <Table className="Devices">
+            <thead>
+            <tr>
+              <th>Type</th>
+              <th>Id</th>
+              <th>Label</th>
+            </tr>
+            </thead>
+            <tbody>
             {this.props.devices.map(device => (
-                <tbody key={device.kind + device.deviceId}>
-                <tr>
-                  <td className="title" colSpan={2}>{device.kind}</td>
-                </tr>
-                <tr>
-                  <td className="title">deviceId</td>
+                <tr key={device.kind + device.deviceId}>
+                  <td>{device.kind}</td>
                   <td>{device.deviceId}</td>
-                </tr>
-                <tr>
-                  <td className="title">label</td>
                   <td>{device.label}</td>
                 </tr>
-                </tbody>
-            ))}
+              ))}
+            </tbody>
           </Table>
         </div>
     );
