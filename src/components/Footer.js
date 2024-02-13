@@ -6,6 +6,7 @@ import ListAllDevices from "./media/ListAllDevices";
 import ListAllSupportedConstraints from "./media/ListAllSupportedConstraints";
 import MediaTrackSettings from "./media/MediaTrackSettings";
 import {FaAngleDoubleDown, FaAngleDoubleUp} from "react-icons/fa";
+import ListCodecSupport from "./media/ListCodecSupport";
 
 class Footer extends Component {
   static propTypes = {
@@ -45,6 +46,7 @@ class Footer extends Component {
               <ListAllSupportedConstraints
                   supportedConstraints={this.props.supportedConstraints}/>
             </Tab>
+            <Tab eventKey="codecTab" title="Supported Codecs"><ListCodecSupport /></Tab>
           </Tabs>
         </footer>
     );
