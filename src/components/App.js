@@ -1,16 +1,16 @@
 import './App.css';
 import Project from '../model/Project.js';
 import React, {Component} from "react";
-import {Container, Row, Col} from "react-bootstrap";
+import {Col, Container, Row} from "react-bootstrap";
 import AVTrack from "./track/AVTrack";
 import ProjectInfo from "./project/ProjectInfo";
 import MainNavBar from "./MainNavBar";
-import ProjectList from "./project/ProjectList";
 import ProjectTracksView from "./track/ProjectTracksView";
 import Database from '../util/Database.js';
 import Footer from "./Footer";
 import WelcomeMessage from "./documentation/WelcomeMessage";
 import ProjectSelectionModal from "./project/ProjectSelectionModal";
+import ProjectSettings from "./project/ProjectSettings";
 
 const showModalStorageKey = 'WelcomeMessage.showWelcomeMessage';
 
@@ -371,7 +371,7 @@ class App extends Component {
                     projectTracks={this.state.projectTracks} updateProjectTrackName={this.updateProjectTrackName}/>
               </Col>
               <Col className="App-rightPane" xl={3} lg={4} md={4} sm={3}>
-                settings coming soon
+                <ProjectSettings />
               </Col>
             </Row>
             <Row>

@@ -1,7 +1,7 @@
 import './Footer.css';
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
-import {Tab, Tabs, Button} from "react-bootstrap";
+import {Button, Tab, Tabs} from "react-bootstrap";
 import ListAllDevices from "./media/ListAllDevices";
 import ListAllSupportedConstraints from "./media/ListAllSupportedConstraints";
 import MediaTrackSettings from "./media/MediaTrackSettings";

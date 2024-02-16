@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
+import {Table} from "react-bootstrap";
 
 class ListAllSupportedConstraints extends Component {
   static propTypes = {
@@ -15,11 +16,22 @@ class ListAllSupportedConstraints extends Component {
   render() {
     return (
         <div className="devicesContainer">
-          <ul>
+          <Table>
+            <thead>
+            <tr>
+              <th>Constraint</th>
+              <th>Supported</th>
+            </tr>
+            </thead>
+            <tbody>
             {Object.keys(this.props.supportedConstraints).map(keyName => (
-                <li key={keyName}>{keyName} ({this.props.supportedConstraints[keyName].toString()})</li>
+                <tr key={keyName}>
+                  <td>{keyName}</td>
+                  <td>{this.props.supportedConstraints[keyName] ? 'Yes' : 'No'}</td>
+                </tr>
             ))}
-          </ul>
+            </tbody>
+          </Table>
         </div>
     );
   }

@@ -1,6 +1,6 @@
 import './WelcomeMessage.css';
 import React, {Component} from 'react';
-import {Modal, Button} from 'react-bootstrap';
+import {Button, Modal} from 'react-bootstrap';
 import navlogo from "../../navlogo.png";
 import PropTypes from "prop-types";
 

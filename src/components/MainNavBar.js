@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import {Button, Container, Form, Nav, Navbar, NavDropdown} from "react-bootstrap";
 import TimerClock from "./track/TimerClock";
-import {FaCloudUploadAlt, FaFileExport, FaFileVideo, FaFolderOpen, FaRegCommentAlt} from "react-icons/fa";
+import {FaCloudUploadAlt, FaFileExport, FaFolderOpen, FaFolderPlus, FaRegCommentAlt} from "react-icons/fa";
 
 class MainNavBar extends Component {
   static propTypes = {
@@ -61,7 +61,7 @@ class MainNavBar extends Component {
                   navbarScroll
               >
                 <NavDropdown title="Project" id="navbarScrollingDropdown">
-                  <NavDropdown.Item onClick={this.props.createNewProject}><FaFileVideo/> New</NavDropdown.Item>
+                  <NavDropdown.Item onClick={this.props.createNewProject}><FaFolderPlus/> New</NavDropdown.Item>
                   <NavDropdown.Divider/>
                   <NavDropdown.Item onClick={this.props.toggleProjectSelectionModal}><FaFolderOpen/> Open</NavDropdown.Item>
                   <NavDropdown.Divider/>
