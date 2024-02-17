@@ -1,6 +1,6 @@
-import './ProjectList.css'
+import './ProjectList.css';
 import React, {Component} from 'react';
-import {Badge, Button, Table} from "react-bootstrap";
+import {Badge, Button, Table, Pagination} from "react-bootstrap";
 import PropTypes from "prop-types";
 import {FaRegTrashAlt} from "react-icons/fa";
 
@@ -15,10 +15,28 @@ class ProjectList extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      currentPage: 1, // default page
+    };
+  }
+
+  handlePageChange = (pageNumber) => {
+    this.setState({currentPage: pageNumber});
   }
 
   render() {
+    const recordsPerPage = 6;
+    const {projects} = this.props;
+    const {currentPage} = this.state;
+
+    // calculate number of pages
+    const numPages = Math.ceil(projects.length / recordsPerPage);
+
+    // get projects for current page
+    const startIndex = (currentPage - 1) * recordsPerPage;
+    const endIndex = startIndex + recordsPerPage;
+    const currentProjects = projects.slice(startIndex, endIndex);
+
     return (
         <div>
           <Table variant={"dark"} striped bordered hover>
@@ -28,7 +46,7 @@ class ProjectList extends Component {
               <th>&nbsp;</th>
             </tr>
             </thead>
-            {this.props.projects && this.props.projects.map((project, index) => {
+            {currentProjects && currentProjects.map((project, index) => {
               let projectClass = "ProjectListDisplay";
               if (this.props.selectedProject && project.id === this.props.selectedProject.id) {
                 projectClass += " ProjectListDisplaySelected";
@@ -41,7 +59,7 @@ class ProjectList extends Component {
                     }} className={projectClass}>{project.name}
                       <Badge title={"Project Track Count"} className="ProjectListBadge" bg="secondary"
                              pill>{project.trackIds.length}</Badge></td>
-                    <td align={"right"}><Button variant={"dark"} onClick={() => {
+                    <td className="project-buttons" align={"right"}><Button variant={"dark"} onClick={() => {
                       this.props.deleteProject(project.id)
                     }}><FaRegTrashAlt/></Button></td>
                   </tr>
@@ -49,6 +67,13 @@ class ProjectList extends Component {
               );
             })}
           </Table>
+          <Pagination>
+            {[...Array(numPages).keys()].map((page) => (
+                <Pagination.Item key={page+1} active={page+1 === currentPage} onClick={() => this.handlePageChange(page+1)}>
+                  {page+1}
+                </Pagination.Item>
+            ))}
+          </Pagination>
         </div>
     );
   }

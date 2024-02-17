@@ -12,3 +12,6 @@ td.ProjectListDisplaySelected {
   color: #7994cc;
   font-weight: bold;
 }
+td.project-buttons {
+  width: 40px;
+}
