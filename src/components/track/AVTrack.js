@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import MediaFileUtil from "../../util/MediaFileUtil";
 import Database from "../../util/Database";
 import {FaCircle, FaPlay, FaSquare} from "react-icons/fa";
+import VideoResolutions from "../../constants/VideoResolutions";
 
 class AVTrack extends Component {
   static propTypes = {
@@ -177,28 +178,35 @@ class AVTrack extends Component {
   };
 
   startAVStreams = async () => {
+    let videoHeight;
+    let videoWidth;
+    if(this.props.project.settings.video.resolution === 'Other'){
+      videoHeight = this.props.project.settings.video.customHeight;
+      videoWidth = this.props.project.settings.video.customWidth;
+    }else{
+      videoHeight = VideoResolutions[this.props.project.settings.video.resolution].height;
+      videoWidth = VideoResolutions[this.props.project.settings.video.resolution].width;
+    }
+
     try {
       //https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints
       const constraints = {
         audio: {
-          autoGainControl: false,
+          autoGainControl: this.props.project.settings.audio.autoGainControl,
           channelCount: 1,
           deviceId: {
             exact: this.state.selectedAudioDeviceId,
           },
-          echoCancellation: false,
-          noiseSuppression: false,
-          // sampleRate: 44100,
-          // sampleSize: 16,
+          echoCancellation: this.props.project.settings.audio.echoCancellation,
+          noiseSuppression: this.props.project.settings.audio.noiseSuppression,
         },
         video: {
-          // aspectRatio: ,
           deviceId: {
             exact: this.state.selectedVideoDeviceId,
           },
-          frameRate: 15,
-          width: 1280,
-          height: 720,
+          frameRate: this.props.project.settings.video.frameRate,
+          width: videoWidth,
+          height: videoHeight,
           resizeMode: "none",
         }
       };

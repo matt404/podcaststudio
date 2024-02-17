@@ -10,7 +10,7 @@ import Database from '../util/Database.js';
 import Footer from "./Footer";
 import WelcomeMessage from "./documentation/WelcomeMessage";
 import ProjectSelectionModal from "./project/ProjectSelectionModal";
-import ProjectSettings from "./project/ProjectSettings";
+import ProjectSettingsView from "./project/ProjectSettingsView";
 
 const showModalStorageKey = 'WelcomeMessage.showWelcomeMessage';
 
@@ -49,6 +49,7 @@ class App extends Component {
     this.openProject = this.openProject.bind(this);
     this.saveTrackToProject = this.saveTrackToProject.bind(this);
     this.setProjectInfo = this.setProjectInfo.bind(this);
+    this.setProjectSettings = this.setProjectSettings.bind(this);
     this.setSelectedDeviceTracks = this.setSelectedDeviceTracks.bind(this);
     this.startRecording = this.startRecording.bind(this);
     this.stopRecording = this.stopRecording.bind(this);
@@ -233,6 +234,17 @@ class App extends Component {
     });
   }
 
+  setProjectSettings(projectSettings) {
+    let projects = Array.from(this.state.projects);
+    let selectedProject = projects.find(project => project.id === this.state.selectedProject.id);
+    selectedProject.settings = projectSettings;
+    this.database.updateProject(selectedProject);
+    this.setState({
+      projects: projects,
+      selectedProject: selectedProject,
+    });
+  }
+
   setSelectedDeviceTracks(selectedDeviceTracks) {
     console.log(selectedDeviceTracks);
     this.selectedDeviceTracks = selectedDeviceTracks;
@@ -371,7 +383,9 @@ class App extends Component {
                     projectTracks={this.state.projectTracks} updateProjectTrackName={this.updateProjectTrackName}/>
               </Col>
               <Col className="App-rightPane" xl={3} lg={4} md={4} sm={3}>
-                <ProjectSettings />
+                <ProjectSettingsView
+                    project={this.state.selectedProject}
+                    setProjectSettings={this.setProjectSettings} />
               </Col>
             </Row>
             <Row>
