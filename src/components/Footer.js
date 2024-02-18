@@ -13,6 +13,8 @@ class Footer extends Component {
     devices: PropTypes.array,
     footerOpen: PropTypes.bool,
     selectedDeviceTracks: PropTypes.array,
+    supportedAudioCodecs: PropTypes.array,
+    supportedVideoCodecs: PropTypes.array,
     supportedConstraints: PropTypes.object,
     toggleFooter: PropTypes.func,
   }
@@ -46,7 +48,10 @@ class Footer extends Component {
               <ListAllSupportedConstraints
                   supportedConstraints={this.props.supportedConstraints}/>
             </Tab>
-            <Tab eventKey="codecTab" title="Supported Codecs"><ListCodecSupport /></Tab>
+            <Tab eventKey="codecTab" title="Supported Codecs">
+              <ListCodecSupport
+                  supportedAudioCodecs={this.props.supportedAudioCodecs}
+                  supportedVideoCodecs={this.props.supportedVideoCodecs} /></Tab>
           </Tabs>
         </footer>
     );

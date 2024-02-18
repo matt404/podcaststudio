@@ -9,6 +9,8 @@ import MediaFileUtil from "../../util/MediaFileUtil";
 import Database from "../../util/Database";
 import {FaCircle, FaPlay, FaSquare} from "react-icons/fa";
 import VideoResolutions from "../../constants/VideoResolutions";
+import VideoCodecs from "../../constants/VideoCodecs";
+import AudioCodecs from "../../constants/AudioCodecs";
 
 class AVTrack extends Component {
   static propTypes = {
@@ -46,6 +48,7 @@ class AVTrack extends Component {
     this.mediaRecorderRef = React.createRef();
 
     this.clearTracksFromVideoRef = this.clearTracksFromVideoRef.bind(this);
+    this.getAVConstraints = this.getAVConstraints.bind(this);
     this.handleAudioDeviceChange = this.handleAudioDeviceChange.bind(this);
     this.handleDataAvailable = this.handleDataAvailable.bind(this);
     this.handleVideoDeviceChange = this.handleVideoDeviceChange.bind(this);
@@ -143,9 +146,13 @@ class AVTrack extends Component {
 
   startRecording = () => {
     this.recordedChunks = [];
-    this.startTime = Date.now(); // Record the start time
+    this.startTime = Date.now();
+    let mimeType = VideoCodecs[this.props.project.settings.video.codec].type;
 
-    this.mediaRecorderRef.current = new MediaRecorder(this.videoRef.current.srcObject);
+    //insert audio codec after the video codec using regex, insert a comma between the codecs
+    mimeType = mimeType.replace(/; codecs="(.*)"/, "; codecs=\"$1, " + AudioCodecs[this.props.project.settings.audio.codec].codec + "\"");
+    let options = {mimeType: mimeType};
+    this.mediaRecorderRef.current = new MediaRecorder(this.videoRef.current.srcObject, options);
     this.mediaRecorderRef.current.ondataavailable = this.handleDataAvailable;
     this.mediaRecorderRef.current.start();
 
@@ -159,8 +166,8 @@ class AVTrack extends Component {
 
       MediaFileUtil.blobToArrayBuffer(blob, (dataUrl) => {
 
-        const endTime = Date.now(); // Record the end time
-        const duration = endTime - this.startTime; // Calculate the duration
+        const endTime = Date.now();
+        const duration = endTime - this.startTime;
         const trackName = "Track " + (this.props.project.trackIds.length + 1);
         const newId = Database.generateUUID();
 
@@ -177,39 +184,44 @@ class AVTrack extends Component {
     this.props.stopRecording();
   };
 
-  startAVStreams = async () => {
+  getAVConstraints = () => {
+    // API Doc: https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints
+
     let videoHeight;
     let videoWidth;
-    if(this.props.project.settings.video.resolution === 'Other'){
+    if (this.props.project.settings.video.resolution === 'Other') {
       videoHeight = this.props.project.settings.video.customHeight;
       videoWidth = this.props.project.settings.video.customWidth;
-    }else{
+    } else {
       videoHeight = VideoResolutions[this.props.project.settings.video.resolution].height;
       videoWidth = VideoResolutions[this.props.project.settings.video.resolution].width;
     }
 
-    try {
-      //https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints
-      const constraints = {
-        audio: {
-          autoGainControl: this.props.project.settings.audio.autoGainControl,
-          channelCount: 1,
-          deviceId: {
-            exact: this.state.selectedAudioDeviceId,
-          },
-          echoCancellation: this.props.project.settings.audio.echoCancellation,
-          noiseSuppression: this.props.project.settings.audio.noiseSuppression,
+    return {
+      audio: {
+        autoGainControl: this.props.project.settings.audio.autoGainControl,
+        channelCount: 1,
+        deviceId: {
+          exact: this.state.selectedAudioDeviceId,
         },
-        video: {
-          deviceId: {
-            exact: this.state.selectedVideoDeviceId,
-          },
-          frameRate: this.props.project.settings.video.frameRate,
-          width: videoWidth,
-          height: videoHeight,
-          resizeMode: "none",
-        }
-      };
+        echoCancellation: this.props.project.settings.audio.echoCancellation,
+        noiseSuppression: this.props.project.settings.audio.noiseSuppression,
+      },
+      video: {
+        deviceId: {
+          exact: this.state.selectedVideoDeviceId,
+        },
+        frameRate: this.props.project.settings.video.frameRate,
+        width: videoWidth,
+        height: videoHeight,
+        resizeMode: "none",
+      }
+    };
+  }
+
+  startAVStreams = async () => {
+    try {
+      const constraints = this.getAVConstraints();
       await navigator.mediaDevices.getUserMedia(constraints)
           .then(stream => {
             this.videoRef.current.srcObject = stream;
@@ -234,30 +246,7 @@ class AVTrack extends Component {
 
   startPipStreams = async () => {
     try {
-      //https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints
-      const constraints = {
-        audio: {
-          autoGainControl: false,
-          channelCount: 1,
-          deviceId: {
-            exact: this.state.selectedAudioDeviceId,
-          },
-          echoCancellation: false,
-          noiseSuppression: false,
-          // sampleRate: 44100,
-          // sampleSize: 16,
-        },
-        video: {
-          // aspectRatio: ,
-          deviceId: {
-            exact: this.state.selectedVideoDeviceId,
-          },
-          frameRate: 15,
-          width: 1280,
-          height: 720,
-          resizeMode: "none",
-        }
-      };
+      const constraints = this.getAVConstraints();
       await navigator.mediaDevices.getUserMedia(constraints)
           .then(stream => {
             this.videoPipRef.current.srcObject = stream;

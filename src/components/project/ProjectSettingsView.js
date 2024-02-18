@@ -3,12 +3,16 @@ import React, {Component} from 'react';
 import {Accordion, Form, InputGroup} from "react-bootstrap";
 import VideoResolutions from '../../constants/VideoResolutions.js';
 import PropTypes from "prop-types";
-import ProjectSettings from "../../model/ProjectSettings"; // import VideoResolutions
+import ProjectSettings from "../../model/ProjectSettings";
+import VideoCodecs from "../../constants/VideoCodecs";
+import AudioCodecs from "../../constants/AudioCodecs"; // import VideoResolutions
 
 class ProjectSettingsView extends Component {
   static propTypes = {
     project: PropTypes.object,
     setProjectSettings: PropTypes.func,
+    supportedAudioCodecs: PropTypes.array,
+    supportedVideoCodecs: PropTypes.array,
   }
 
   constructor(props) {
@@ -32,6 +36,7 @@ class ProjectSettingsView extends Component {
     settings.video.resolution = document.getElementById('VideoResolution').value;
     settings.video.customWidth = document.getElementById('CustomWidth') ? parseInt(document.getElementById('CustomWidth').value) : 0;
     settings.video.customHeight = document.getElementById('CustomHeight') ? parseInt(document.getElementById('CustomHeight').value) : 0;
+    settings.video.codec = document.getElementById('VideoCodec').value;
 
     this.props.setProjectSettings(settings);
 
@@ -43,8 +48,10 @@ class ProjectSettingsView extends Component {
     let customWidth = 0;
     let resolution = "HD";
     let frameRate = 0;
+    let videoCodec = "VP8";
 
     // Audio Settings
+    let audioCodec = "OPUS";
     let autoGainControl = false;
     let echoCancellation = false;
     let noiseSuppression = false;
@@ -54,6 +61,8 @@ class ProjectSettingsView extends Component {
       customWidth = this.props.project.settings.video.customWidth;
       frameRate = this.props.project.settings.video.frameRate;
       resolution = this.props.project.settings.video.resolution;
+      videoCodec = this.props.project.settings.video.codec;
+      audioCodec = this.props.project.settings.audio.codec;
       autoGainControl = this.props.project.settings.audio.autoGainControl;
       echoCancellation = this.props.project.settings.audio.echoCancellation;
       noiseSuppression = this.props.project.settings.audio.noiseSuppression;
@@ -64,6 +73,14 @@ class ProjectSettingsView extends Component {
             <Accordion.Item eventKey="0">
               <Accordion.Header>Video Settings</Accordion.Header>
               <Accordion.Body>
+                <Form.Group controlId="VideoCodec">
+                  <Form.Label>Video Codec</Form.Label>
+                  <Form.Select aria-label="Default select example" value={videoCodec} onChange={this.handleSettingsChange}>
+                    {this.props.supportedVideoCodecs.map(key => (
+                        <option key={key} value={key}>{VideoCodecs[key].name}</option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
                 <Form.Label>Resolution</Form.Label>
                 <Form.Select id={"VideoResolution"} aria-label="Default select example" value={resolution} onChange={this.handleSettingsChange}>
                   {Object.keys(VideoResolutions).map(key => (
@@ -88,6 +105,14 @@ class ProjectSettingsView extends Component {
             <Accordion.Item eventKey="1">
               <Accordion.Header>Audio Settings</Accordion.Header>
               <Accordion.Body>
+                <Form.Group controlId="AudioCodec">
+                  <Form.Label>Audio Codec</Form.Label>
+                  <Form.Select aria-label="Default select example" value={audioCodec} onChange={this.handleSettingsChange}>
+                    {this.props.supportedAudioCodecs.map(key => (
+                        <option key={key} value={key}>{AudioCodecs[key].name}</option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
                 <Form.Group controlId="AutoGainControl">
                   <Form.Check type="checkbox" label="Auto Gain Control" checked={autoGainControl} onChange={this.handleSettingsChange} />
                 </Form.Group>

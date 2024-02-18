@@ -11,6 +11,8 @@ import Footer from "./Footer";
 import WelcomeMessage from "./documentation/WelcomeMessage";
 import ProjectSelectionModal from "./project/ProjectSelectionModal";
 import ProjectSettingsView from "./project/ProjectSettingsView";
+import VideoCodecs from "../constants/VideoCodecs";
+import AudioCodecs from "../constants/AudioCodecs";
 
 const showModalStorageKey = 'WelcomeMessage.showWelcomeMessage';
 
@@ -32,10 +34,13 @@ class App extends Component {
       streaming: false,
       streamingDisplayMedia: false,
       streamingPip: false,
+      supportedAudioCodecs: [],
+      supportedVideoCodecs: [],
       supportedConstraints: {},
     };
     this.database = new Database();
     this.selectedDeviceTracks = [];
+    this.checkCodecSupport = this.checkCodecSupport.bind(this);
     this.createNewProject = this.createNewProject.bind(this);
     this.deleteProject = this.deleteProject.bind(this);
     this.deleteProjectTrack = this.deleteProjectTrack.bind(this);
@@ -73,7 +78,29 @@ class App extends Component {
     this.setState({
       supportedConstraints: supportedConstraints
     });
+    this.checkCodecSupport();
   }
+
+  checkCodecSupport = () => {
+    let supportedAudioCodecs = [];
+    let supportedVideoCodecs = [];
+
+    Object.keys(VideoCodecs).forEach(key => {
+      if (MediaRecorder.isTypeSupported(VideoCodecs[key].type)) {
+        supportedVideoCodecs.push(key);
+      }
+    });
+    Object.keys(AudioCodecs).forEach(key => {
+      if (MediaRecorder.isTypeSupported(AudioCodecs[key].type)) {
+        supportedAudioCodecs.push(key);
+      }
+    });
+
+    this.setState({
+      supportedAudioCodecs: supportedAudioCodecs,
+      supportedVideoCodecs: supportedVideoCodecs
+    });
+  };
 
   createNewProject() {
     const newId = Database.generateUUID();
@@ -246,7 +273,6 @@ class App extends Component {
   }
 
   setSelectedDeviceTracks(selectedDeviceTracks) {
-    console.log(selectedDeviceTracks);
     this.selectedDeviceTracks = selectedDeviceTracks;
   }
 
@@ -385,7 +411,9 @@ class App extends Component {
               <Col className="App-rightPane" xl={3} lg={4} md={4} sm={3}>
                 <ProjectSettingsView
                     project={this.state.selectedProject}
-                    setProjectSettings={this.setProjectSettings} />
+                    setProjectSettings={this.setProjectSettings}
+                    supportedAudioCodecs={this.state.supportedAudioCodecs}
+                    supportedVideoCodecs={this.state.supportedVideoCodecs}/>
               </Col>
             </Row>
             <Row>
@@ -394,6 +422,8 @@ class App extends Component {
                     devices={this.state.devices}
                     footerOpen={this.state.footerClassName === 'App-footer-open'}
                     selectedDeviceTracks={this.selectedDeviceTracks}
+                    supportedAudioCodecs={this.state.supportedAudioCodecs}
+                    supportedVideoCodecs={this.state.supportedVideoCodecs}
                     supportedConstraints={this.state.supportedConstraints}
                     toggleFooter={this.toggleFooter}
                 />

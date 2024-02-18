@@ -1,41 +1,20 @@
 import './ListCodecSupport.css';
 import React, {Component} from 'react';
 import {Table} from "react-bootstrap";
+import PropTypes from "prop-types";
 import VideoCodecs from "../../constants/VideoCodecs";
+import AudioCodecs from "../../constants/AudioCodecs";
 
 
 class ListCodecSupport extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      supportedCodecs: [],
-    };
+  static propTypes = {
+    supportedAudioCodecs: PropTypes.array,
+    supportedVideoCodecs: PropTypes.array,
   }
 
-  checkCodecSupport = (codec) => {
-    const config = {
-      type: 'file',
-      video: {
-        contentType: codec.contentType,
-        bitrate: 0,
-        framerate: 1,
-        width: 1280,
-        height: 720,
-      },
-    };
-
-    return navigator.mediaCapabilities.decodingInfo(config).then(info => {
-      return {
-        codec: codec.description,
-        supported: info.supported,
-      };
-    });
-  };
-
-  componentDidMount() {
-    Promise.all(VideoCodecs.map(this.checkCodecSupport)).then(supportedCodecs => {
-      this.setState({ supportedCodecs });
-    });
+  constructor(props) {
+    super(props);
+    this.state = {};
   }
 
   render() {
@@ -44,15 +23,30 @@ class ListCodecSupport extends Component {
           <Table>
             <thead>
             <tr>
+              <th>Type</th>
               <th>Codec</th>
+              <th>Description</th>
+              <th>MimeType</th>
               <th>Supported</th>
             </tr>
             </thead>
             <tbody>
-            {this.state.supportedCodecs.map(codec => (
-                <tr key={codec.codec}>
-                  <td>{codec.codec}</td>
-                  <td>{codec.supported ? 'Yes' : 'No'}</td>
+            {Object.keys(VideoCodecs).map(key => (
+                <tr key={key}>
+                  <td>Video</td>
+                  <td>{VideoCodecs[key].name}</td>
+                  <td>{VideoCodecs[key].description}</td>
+                  <td>{VideoCodecs[key].type}</td>
+                  <td>{this.props.supportedVideoCodecs.includes(key) ? 'Yes' : 'No'}</td>
+                </tr>
+            ))}
+            {Object.keys(AudioCodecs).map(key => (
+                <tr key={key}>
+                  <td>Audio</td>
+                  <td>{AudioCodecs[key].name}</td>
+                  <td>{AudioCodecs[key].description}</td>
+                  <td>{AudioCodecs[key].type}</td>
+                  <td>{this.props.supportedAudioCodecs.includes(key) ? 'Yes' : 'No'}</td>
                 </tr>
             ))}
             </tbody>
