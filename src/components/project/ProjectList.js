@@ -6,6 +6,7 @@ import {FaRegTrashAlt} from "react-icons/fa";
 
 class ProjectList extends Component {
   static propTypes = {
+    colorTheme: PropTypes.string,
     deleteProject: PropTypes.func,
     openProject: PropTypes.func,
     projects: PropTypes.array,
@@ -39,7 +40,7 @@ class ProjectList extends Component {
 
     return (
         <div>
-          <Table variant={"dark"} striped bordered hover>
+          <Table variant={this.props.colorTheme} striped bordered hover>
             <thead>
             <tr>
               <th>Projects</th>

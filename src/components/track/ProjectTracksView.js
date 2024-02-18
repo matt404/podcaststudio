@@ -7,6 +7,7 @@ import MediaFileUtil from "../../util/MediaFileUtil";
 
 class ProjectTracksView extends Component {
   static propTypes = {
+    colorTheme: PropTypes.string,
     project: PropTypes.object,
     projectTracks: PropTypes.array,
     deleteProjectTrack: PropTypes.func,
@@ -75,7 +76,7 @@ class ProjectTracksView extends Component {
             <div id="TotalTrackDuration">Total Runtime: {this.sumDuration(this.props.projectTracks)}</div>
           </div>
           <Form>
-            <Table variant={"dark"} striped bordered hover>
+            <Table variant={this.props.colorTheme} striped bordered hover>
               <thead>
               <tr>
                 <th className="track-checklist">&nbsp;</th>

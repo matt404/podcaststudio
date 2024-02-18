@@ -8,6 +8,7 @@ import ProjectList from "./ProjectList";
 
 class ProjectSelectionModal extends Component {
   static propTypes = {
+    colorTheme: PropTypes.string,
     showProjectSelectionModal: PropTypes.bool,
     deleteProject: PropTypes.func,
     openProject: PropTypes.func,
@@ -39,6 +40,7 @@ class ProjectSelectionModal extends Component {
           </Modal.Header>
           <Modal.Body>
             <ProjectList
+                colorTheme={this.props.colorTheme}
                 projects={this.props.projects}
                 selectedProjectId={this.props.selectedProjectId}
                 deleteProject={this.props.deleteProject}

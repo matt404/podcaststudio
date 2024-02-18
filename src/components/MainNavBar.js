@@ -10,6 +10,7 @@ class MainNavBar extends Component {
     createNewProject: PropTypes.func,
     exportProjectToVideoFile: PropTypes.func,
     recording: PropTypes.bool,
+    setTheme: PropTypes.func,
     streaming: PropTypes.bool,
     streamingDisplayMedia: PropTypes.bool,
     toggleShowWelcomeMessage: PropTypes.func,
@@ -49,8 +50,7 @@ class MainNavBar extends Component {
 
   render() {
     return (
-        <Navbar expand="lg" className="bg-body-tertiary"
-                data-bs-theme="dark">
+        <Navbar expand="lg" className="bg-body-tertiary">
           <Container fluid>
             <Navbar.Brand href="#"><img alt="logo" src={navlogo}/> PodCastStudio</Navbar.Brand>
             <Navbar.Toggle aria-controls="navbarScroll"/>
@@ -71,6 +71,10 @@ class MainNavBar extends Component {
                   <NavDropdown.Item onClick={() => {
                     alert("Not implemented")
                   }}><FaCloudUploadAlt/> Upload</NavDropdown.Item>
+                </NavDropdown>
+                <NavDropdown title="Theme" id="navbarScrollingDropdown">
+                  <NavDropdown.Item onClick={() => this.props.setTheme('light')}>Light</NavDropdown.Item>
+                  <NavDropdown.Item onClick={() => this.props.setTheme('dark')}>Dark</NavDropdown.Item>
                 </NavDropdown>
                 <NavDropdown title="Help" id="navbarScrollingDropdown">
                   <NavDropdown.Item onClick={this.props.toggleShowWelcomeMessage}><FaRegCommentAlt/> Welcome</NavDropdown.Item>

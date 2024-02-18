@@ -13,13 +13,15 @@ import ProjectSelectionModal from "./project/ProjectSelectionModal";
 import ProjectSettingsView from "./project/ProjectSettingsView";
 import VideoCodecs from "../constants/VideoCodecs";
 import AudioCodecs from "../constants/AudioCodecs";
-
-const showModalStorageKey = 'WelcomeMessage.showWelcomeMessage';
+import LocalStorageKeys from "../constants/LocalStorageKeys";
 
 class App extends Component {
 
   constructor(props) {
     super(props);
+
+    const colorTheme = localStorage.getItem(LocalStorageKeys.COLOR_THEME);
+
     this.state = {
       devices: [],
       displayMedia: [],
@@ -29,7 +31,7 @@ class App extends Component {
       projectTracks: [],
       recording: false,
       selectedProject: null,
-      showWelcomeMessage: localStorage.getItem(showModalStorageKey) !== 'false',
+      showWelcomeMessage: localStorage.getItem(LocalStorageKeys.SHOW_WELCOME_MESSAGE) !== 'false',
       showProjectSelectionModal: false,
       streaming: false,
       streamingDisplayMedia: false,
@@ -37,7 +39,9 @@ class App extends Component {
       supportedAudioCodecs: [],
       supportedVideoCodecs: [],
       supportedConstraints: {},
+      colorTheme: colorTheme ? colorTheme : 'dark',
     };
+
     this.database = new Database();
     this.selectedDeviceTracks = [];
     this.checkCodecSupport = this.checkCodecSupport.bind(this);
@@ -56,6 +60,7 @@ class App extends Component {
     this.setProjectInfo = this.setProjectInfo.bind(this);
     this.setProjectSettings = this.setProjectSettings.bind(this);
     this.setSelectedDeviceTracks = this.setSelectedDeviceTracks.bind(this);
+    this.setColorTheme = this.setColorTheme.bind(this);
     this.startRecording = this.startRecording.bind(this);
     this.stopRecording = this.stopRecording.bind(this);
     this.startStreaming = this.startStreaming.bind(this);
@@ -79,6 +84,7 @@ class App extends Component {
       supportedConstraints: supportedConstraints
     });
     this.checkCodecSupport();
+    document.documentElement.setAttribute('data-bs-theme', this.state.colorTheme);
   }
 
   checkCodecSupport = () => {
@@ -276,6 +282,12 @@ class App extends Component {
     this.selectedDeviceTracks = selectedDeviceTracks;
   }
 
+  setColorTheme = (colorTheme) => {
+    document.documentElement.setAttribute('data-bs-theme', colorTheme);
+    localStorage.setItem(LocalStorageKeys.COLOR_THEME, colorTheme);
+    this.setState({colorTheme: colorTheme});
+  }
+
   startStreamingDisplayMedia() {
     this.setState({streamingDisplayMedia: true});
   }
@@ -335,7 +347,7 @@ class App extends Component {
   toggleShowWelcomeMessage() {
     const showWelcomeMessage = !this.state.showWelcomeMessage;
     this.setState({showWelcomeMessage: showWelcomeMessage}, () => {
-      localStorage.setItem(showModalStorageKey, showWelcomeMessage.toString());
+      localStorage.setItem(LocalStorageKeys.SHOW_WELCOME_MESSAGE, showWelcomeMessage.toString());
     });
   }
 
@@ -352,11 +364,12 @@ class App extends Component {
 
   render() {
     return (
-        <>
+        <div data-bs-theme={this.state.colorTheme}>
           <WelcomeMessage
               showWelcomeMessage={this.state.showWelcomeMessage}
               toggleShowWelcomeMessage={this.toggleShowWelcomeMessage}/>
           <ProjectSelectionModal
+              colorTheme={this.state.colorTheme}
               projects={this.state.projects}
               selectedProject={this.state.selectedProject}
               showProjectSelectionModal={this.state.showProjectSelectionModal}
@@ -366,7 +379,7 @@ class App extends Component {
           <Container className="vh-100 mw-100 d-flex flex-column">
             <Row>
               <Col xl={12} className="App-header">
-                <MainNavBar
+                <MainNavBar setTheme={this.setColorTheme}
                     createNewProject={this.createNewProject}
                     exportProjectToVideoFile={this.exportProjectToVideoFile}
                     recording={this.state.recording}
@@ -402,6 +415,7 @@ class App extends Component {
                     startRecording={this.startRecording}
                     stopRecording={this.stopRecording}/>
                 <ProjectTracksView
+                    colorTheme={this.state.colorTheme}
                     deleteProjectTrack={this.deleteProjectTrack}
                     moveProjectTrackDown={this.moveProjectTrackDown}
                     moveProjectTrackUp={this.moveProjectTrackUp}
@@ -430,7 +444,7 @@ class App extends Component {
               </Col>
             </Row>
           </Container>
-        </>
+        </div>
     );
   }
 }
