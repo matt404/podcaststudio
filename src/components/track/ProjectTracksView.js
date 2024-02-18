@@ -35,7 +35,7 @@ class ProjectTracksView extends Component {
       const dataUrl = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = dataUrl;
-      a.download = this.props.project.name + " - " + track.name;
+      a.download = this.props.project.name + " - " + track.name + ".webm";
       document.body.appendChild(a);
       a.click();
       a.remove();

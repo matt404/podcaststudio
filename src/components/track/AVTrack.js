@@ -151,12 +151,17 @@ class AVTrack extends Component {
 
     //insert audio codec after the video codec using regex, insert a comma between the codecs
     mimeType = mimeType.replace(/; codecs="(.*)"/, "; codecs=\"$1, " + AudioCodecs[this.props.project.settings.audio.codec].codec + "\"");
-    let options = {mimeType: mimeType};
-    this.mediaRecorderRef.current = new MediaRecorder(this.videoRef.current.srcObject, options);
-    this.mediaRecorderRef.current.ondataavailable = this.handleDataAvailable;
-    this.mediaRecorderRef.current.start();
 
-    this.props.startRecording();
+    if(MediaRecorder.isTypeSupported(mimeType)) {
+      let options = {mimeType: mimeType};
+      this.mediaRecorderRef.current = new MediaRecorder(this.videoRef.current.srcObject, options);
+      this.mediaRecorderRef.current.ondataavailable = this.handleDataAvailable;
+      this.mediaRecorderRef.current.start();
+
+      this.props.startRecording();
+    }else{
+      console.error('MediaRecorder is not supported for the selected Video/Audio codecs: ' + mimeType);
+    }
   };
 
   stopRecording = () => {
