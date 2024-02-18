@@ -28,7 +28,10 @@ class MainNavBar extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.streaming !== prevProps.streaming || this.props.recording !== prevProps.recording) {
+    if (this.props.streaming !== prevProps.streaming
+        || this.props.recording !== prevProps.recording
+        || this.props.streamingDisplayMedia !== prevProps.streamingDisplayMedia) {
+      console.log(this.props, prevProps);
       if (this.props.recording) {
         this.setState({
           activityStatusTitle: 'Recording',
