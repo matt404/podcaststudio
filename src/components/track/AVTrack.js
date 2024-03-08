@@ -155,6 +155,7 @@ class AVTrack extends Component {
     if(MediaRecorder.isTypeSupported(mimeType)) {
       let options = {mimeType: mimeType};
       this.mediaRecorderRef.current = new MediaRecorder(this.videoRef.current.srcObject, options);
+      this.mediaRecorderRef.current
       this.mediaRecorderRef.current.ondataavailable = this.handleDataAvailable;
       this.mediaRecorderRef.current.start();
 
