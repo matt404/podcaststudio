@@ -3,7 +3,6 @@ import Project from '../model/Project.js';
 import React, {Component} from "react";
 import {Col, Container, Row} from "react-bootstrap";
 import AVTrack from "./track/AVTrack";
-import ProjectInfo from "./project/ProjectInfo";
 import MainNavBar from "./MainNavBar";
 import ProjectTracksView from "./track/ProjectTracksView";
 import Database from '../util/Database.js';
@@ -390,12 +389,7 @@ class App extends Component {
                 /></Col>
             </Row>
             <Row className={this.state.bodyClassName}>
-              <Col className="App-menu" xl={3} lg={3} md={3} sm={4}>
-                <ProjectInfo
-                    project={this.state.selectedProject}
-                    setProjectInfo={this.setProjectInfo}/>
-              </Col>
-              <Col className="App-body" xl={6} lg={5} md={5} sm={5}>
+              <Col className="App-body" xl={9} lg={8} md={8} sm={9}>
                 <AVTrack
                     devices={this.state.devices}
                     project={this.state.selectedProject}
@@ -425,6 +419,7 @@ class App extends Component {
               <Col className="App-rightPane" xl={3} lg={4} md={4} sm={3}>
                 <ProjectSettingsView
                     project={this.state.selectedProject}
+                    setProjectInfo={this.setProjectInfo}
                     setProjectSettings={this.setProjectSettings}
                     supportedAudioCodecs={this.state.supportedAudioCodecs}
                     supportedVideoCodecs={this.state.supportedVideoCodecs}/>

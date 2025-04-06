@@ -5,11 +5,13 @@ import VideoResolutions from '../../constants/VideoResolutions.js';
 import PropTypes from "prop-types";
 import ProjectSettings from "../../model/ProjectSettings";
 import VideoCodecs from "../../constants/VideoCodecs";
-import AudioCodecs from "../../constants/AudioCodecs"; // import VideoResolutions
+import AudioCodecs from "../../constants/AudioCodecs";
+import ProjectInfo from "./ProjectInfo"; // import VideoResolutions
 
 class ProjectSettingsView extends Component {
   static propTypes = {
     project: PropTypes.object,
+    setProjectInfo: PropTypes.func,
     setProjectSettings: PropTypes.func,
     supportedAudioCodecs: PropTypes.array,
     supportedVideoCodecs: PropTypes.array,
@@ -69,8 +71,16 @@ class ProjectSettingsView extends Component {
     }
     return (
         <div>
-          <Accordion defaultActiveKey={['0','1']} alwaysOpen>
+          <Accordion defaultActiveKey={['0','1','2']} alwaysOpen>
             <Accordion.Item eventKey="0">
+              <Accordion.Header>Project Info</Accordion.Header>
+                <ProjectInfo
+                    project={this.props.project}
+                    setProjectInfo={this.props.setProjectInfo}/>
+              <Accordion.Body>
+              </Accordion.Body>
+            </Accordion.Item>
+            <Accordion.Item eventKey="1">
               <Accordion.Header>Video Settings</Accordion.Header>
               <Accordion.Body>
                 <Form.Group controlId="VideoCodec">
@@ -102,7 +112,7 @@ class ProjectSettingsView extends Component {
                 </Form.Group>
               </Accordion.Body>
             </Accordion.Item>
-            <Accordion.Item eventKey="1">
+            <Accordion.Item eventKey="2">
               <Accordion.Header>Audio Settings</Accordion.Header>
               <Accordion.Body>
                 <Form.Group controlId="AudioCodec">

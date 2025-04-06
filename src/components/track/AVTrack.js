@@ -11,6 +11,7 @@ import {FaCircle, FaPlay, FaSquare} from "react-icons/fa";
 import VideoResolutions from "../../constants/VideoResolutions";
 import VideoCodecs from "../../constants/VideoCodecs";
 import AudioCodecs from "../../constants/AudioCodecs";
+import DisplayMediaViewer from "./DisplayMediaVIewer";
 
 class AVTrack extends Component {
   static propTypes = {
@@ -43,6 +44,8 @@ class AVTrack extends Component {
     };
     this.recordedChunks = [];
     this.recordedMediaType = '';
+    this.canvasStageRef = React.createRef();
+    this.displayMediaRef = React.createRef();
     this.videoRef = React.createRef();
     this.videoPipRef = React.createRef();
     this.mediaRecorderRef = React.createRef();
@@ -119,7 +122,7 @@ class AVTrack extends Component {
       };
       await navigator.mediaDevices.getDisplayMedia(displayMediaOptions)
           .then(stream => {
-            this.videoRef.current.srcObject = stream;
+            this.displayMediaRef.current.srcObject = stream;
             this.props.setSelectedDeviceTracks(stream.getTracks());
           });
       this.props.startStreamingDisplayMedia();
@@ -129,12 +132,12 @@ class AVTrack extends Component {
   }
 
   stopDisplayMediaStreams = () => {
-    if (this.videoRef.current && this.videoRef.current.srcObject) {
+    if (this.displayMediaRef.current && this.displayMediaRef.current.srcObject) {
       try {
-        this.videoRef.current.srcObject.getTracks()
+        this.displayMediaRef.current.srcObject.getTracks()
             .forEach(track => {
               track.stop();
-              this.videoRef.current.srcObject.removeTrack(track);
+              this.displayMediaRef.current.srcObject.removeTrack(track);
             });
 
       } catch (error) {
@@ -155,7 +158,6 @@ class AVTrack extends Component {
     if(MediaRecorder.isTypeSupported(mimeType)) {
       let options = {mimeType: mimeType};
       this.mediaRecorderRef.current = new MediaRecorder(this.videoRef.current.srcObject, options);
-      this.mediaRecorderRef.current
       this.mediaRecorderRef.current.ondataavailable = this.handleDataAvailable;
       this.mediaRecorderRef.current.start();
 
@@ -301,6 +303,8 @@ class AVTrack extends Component {
                 videoDevices={this.props.devices.filter(device => device.kind === 'videoinput')}
                 selectedVideoDeviceId={this.state.selectedVideoDeviceId}
                 videoRef={this.videoRef}/></td>
+            <td className="DisplayMediaCell"><DisplayMediaViewer
+                displayMediaRef={this.displayMediaRef}/></td>
             <td className="AudioCell"><AudioVisualizer
                 enableVisualizer={this.props.streaming || this.props.streamingDisplayMedia}
                 audioDevices={this.props.devices.filter(device => device.kind === 'audioinput')}
@@ -309,14 +313,13 @@ class AVTrack extends Component {
                 videoRef={this.videoRef}/></td>
           </tr>
           <tr>
-            <td colSpan={2}>
+            <td colSpan={3}>
               <div>
                 <video ref={this.videoPipRef} className="displayNone" autoPlay></video>
                 <Button
                     variant="primary"
                     onClick={this.startDisplayMediaStreams}
                     className={this.props.streaming
-                    || this.props.streamingDisplayMedia
                     || this.state.selectedAudioDeviceId === ''
                         ? 'displayNone' : ''}><FaPlay/> Start Display Streams
                 </Button>
@@ -331,7 +334,6 @@ class AVTrack extends Component {
                     variant="primary"
                     onClick={this.startAVStreams}
                     className={this.props.streaming
-                    || this.props.streamingDisplayMedia
                     || (this.state.selectedVideoDeviceId === '' && this.state.selectedAudioDeviceId === '')
                         ? 'displayNone' : ''}><FaPlay/> Start AV Streams
                 </Button>
@@ -367,6 +369,13 @@ class AVTrack extends Component {
                     className={!this.props.recording
                         ? 'displayNone' : ''}><FaSquare/> Stop Recording
                 </Button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={3}>
+              <div>
+                <canvas className="StageView" ref={this.canvasStageRef}></canvas>
               </div>
             </td>
           </tr>

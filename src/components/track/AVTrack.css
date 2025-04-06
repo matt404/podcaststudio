@@ -2,12 +2,21 @@
   display: none;
 }
 
+canvas.StageView {
+  width:100%;
+  height:56.25%;
+}
+
 td.VideoCell {
-  width: 50%;
+  width: 33.3%;
+}
+
+td.DisplayMediaCell {
+  width: 33.4%;
 }
 
 td.AudioCell {
-  width: 50%;
+  width: 33.3%;
 }
 
 Table.AVTrack tbody tr td div button {
