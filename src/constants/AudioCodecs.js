@@ -9,7 +9,7 @@ const AudioCodecs = {
     type: 'audio/webm; codecs="opus"',
     codec: 'opus',
     name: 'Opus',
-    description: 'A versatile audio codec designed for high-speed Internet streaming and archiving, providing high quality audio.',
+    description: 'A versatile audio codec designed for high-speed Internet streamingAV and archiving, providing high quality audio.',
   },
   VORBIS: {
     type: 'audio/ogg; codecs="vorbis"',

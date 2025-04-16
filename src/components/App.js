@@ -32,9 +32,10 @@ class App extends Component {
       selectedProject: null,
       showWelcomeMessage: localStorage.getItem(LocalStorageKeys.SHOW_WELCOME_MESSAGE) !== 'false',
       showProjectSelectionModal: false,
-      streaming: false,
+      streamingAV: false,
       streamingDisplayMedia: false,
       streamingPip: false,
+      streamingStage: false,
       supportedAudioCodecs: [],
       supportedVideoCodecs: [],
       supportedConstraints: {},
@@ -62,12 +63,14 @@ class App extends Component {
     this.setColorTheme = this.setColorTheme.bind(this);
     this.startRecording = this.startRecording.bind(this);
     this.stopRecording = this.stopRecording.bind(this);
-    this.startStreaming = this.startStreaming.bind(this);
-    this.stopStreaming = this.stopStreaming.bind(this);
-    this.startStreamingDisplayMedia = this.startStreamingDisplayMedia.bind(this);
-    this.stopStreamingDisplayMedia = this.stopStreamingDisplayMedia.bind(this);
-    this.startStreamingPip = this.startStreamingPip.bind(this);
-    this.stopStreamingPip = this.stopStreamingPip.bind(this);
+    this.startAVStream = this.startAVStream.bind(this);
+    this.stopAVStream = this.stopAVStream.bind(this);
+    this.startDisplayMediaStream = this.startDisplayMediaStream.bind(this);
+    this.stopDisplayMediaStream = this.stopDisplayMediaStream.bind(this);
+    this.startMergeStream = this.startMergeStream.bind(this);
+    this.stopMergeStream = this.stopMergeStream.bind(this);
+    this.startPipStream = this.startPipStream.bind(this);
+    this.stopPipStream = this.stopPipStream.bind(this);
     this.toggleFooter = this.toggleFooter.bind(this);
     this.toggleProjectSelectionModal = this.toggleProjectSelectionModal.bind(this);
     this.toggleShowWelcomeMessage = this.toggleShowWelcomeMessage.bind(this);
@@ -287,12 +290,11 @@ class App extends Component {
     this.setState({colorTheme: colorTheme});
   }
 
-  startStreamingDisplayMedia() {
+  startDisplayMediaStream() {
     this.setState({streamingDisplayMedia: true});
   }
 
-  stopStreamingDisplayMedia() {
-    this.selectedDeviceTracks = [];
+  stopDisplayMediaStream() {
     this.setState({
       streamingDisplayMedia: false
     });
@@ -306,22 +308,30 @@ class App extends Component {
     this.setState({recording: false});
   }
 
-  startStreaming() {
-    this.setState({streaming: true});
+  startAVStream() {
+    this.setState({streamingAV: true});
   }
 
-  stopStreaming() {
+  stopAVStream() {
     this.selectedDeviceTracks = [];
     this.setState({
-      streaming: false
+      streamingAV: false
     });
   }
 
-  startStreamingPip() {
+  startMergeStream() {
+    this.setState({streamingStage: true});
+  }
+
+  stopMergeStream() {
+    this.setState({streamingStage: false});
+  }
+
+  startPipStream() {
     this.setState({streamingPip: true});
   }
 
-  stopStreamingPip() {
+  stopPipStream() {
     this.setState({streamingPip: false});
   }
 
@@ -378,11 +388,12 @@ class App extends Component {
           <Container className="vh-100 mw-100 d-flex flex-column">
             <Row>
               <Col xl={12} className="App-header">
-                <MainNavBar setTheme={this.setColorTheme}
+                <MainNavBar
+                    setTheme={this.setColorTheme}
                     createNewProject={this.createNewProject}
                     exportProjectToVideoFile={this.exportProjectToVideoFile}
                     recording={this.state.recording}
-                    streaming={this.state.streaming}
+                    streamingAV={this.state.streamingAV}
                     streamingDisplayMedia={this.state.streamingDisplayMedia}
                     toggleProjectSelectionModal={this.toggleProjectSelectionModal}
                     toggleShowWelcomeMessage={this.toggleShowWelcomeMessage}
@@ -394,18 +405,21 @@ class App extends Component {
                     devices={this.state.devices}
                     project={this.state.selectedProject}
                     recording={this.state.recording}
-                    streaming={this.state.streaming}
+                    streamingAV={this.state.streamingAV}
                     streamingDisplayMedia={this.state.streamingDisplayMedia}
                     streamingPip={this.state.streamingPip}
+                    streamingStage={this.state.streamingStage}
                     selectedDeviceTracks={this.selectedDeviceTracks}
                     saveTrackToProject={this.saveTrackToProject}
                     setSelectedDeviceTracks={this.setSelectedDeviceTracks}
-                    startStreaming={this.startStreaming}
-                    stopStreaming={this.stopStreaming}
-                    startStreamingDisplayMedia={this.startStreamingDisplayMedia}
-                    stopStreamingDisplayMedia={this.stopStreamingDisplayMedia}
-                    startStreamingPip={this.startStreamingPip}
-                    stopStreamingPip={this.stopStreamingPip}
+                    startAVStream={this.startAVStream}
+                    stopAVStream={this.stopAVStream}
+                    startDisplayMediaStream={this.startDisplayMediaStream}
+                    stopDisplayMediaStream={this.stopDisplayMediaStream}
+                    startMergedStream={this.startMergeStream}
+                    stopMergedStream={this.stopMergeStream}
+                    startPipStream={this.startPipStream}
+                    stopPipStream={this.stopPipStream}
                     startRecording={this.startRecording}
                     stopRecording={this.stopRecording}/>
                 <ProjectTracksView

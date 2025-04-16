@@ -11,7 +11,7 @@ class MainNavBar extends Component {
     exportProjectToVideoFile: PropTypes.func,
     recording: PropTypes.bool,
     setTheme: PropTypes.func,
-    streaming: PropTypes.bool,
+    streamingAV: PropTypes.bool,
     streamingDisplayMedia: PropTypes.bool,
     toggleShowWelcomeMessage: PropTypes.func,
     toggleProjectSelectionModal: PropTypes.func,
@@ -28,7 +28,7 @@ class MainNavBar extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.streaming !== prevProps.streaming
+    if (this.props.streamingAV !== prevProps.streamingAV
         || this.props.recording !== prevProps.recording
         || this.props.streamingDisplayMedia !== prevProps.streamingDisplayMedia) {
       if (this.props.recording) {
@@ -36,7 +36,7 @@ class MainNavBar extends Component {
           activityStatusTitle: 'Recording',
           activityStatusCSS: 'danger',
         });
-      } else if (this.props.streaming || this.props.streamingDisplayMedia) {
+      } else if (this.props.streamingAV || this.props.streamingDisplayMedia) {
         this.setState({
           activityStatusTitle: 'Active',
           activityStatusCSS: 'success',

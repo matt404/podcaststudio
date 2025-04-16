@@ -18,20 +18,23 @@ class AVTrack extends Component {
     devices: PropTypes.array,
     project: PropTypes.object,
     recording: PropTypes.bool,
-    streaming: PropTypes.bool,
+    streamingAV: PropTypes.bool,
     streamingDisplayMedia: PropTypes.bool,
+    streamingStage:  PropTypes.bool,
     streamingPip: PropTypes.bool,
     saveTrackToProject: PropTypes.func,
     selectedDeviceTracks: PropTypes.array,
     setSelectedDeviceTracks: PropTypes.func,
-    startDisplayMediaStreams: PropTypes.func,
-    stopDisplayMediaStreams: PropTypes.func,
-    startStreamingPip: PropTypes.func,
-    stopStreamingPip: PropTypes.func,
+    startAVStream: PropTypes.func,
+    stopAVStream: PropTypes.func,
+    startDisplayMediaStream: PropTypes.func,
+    stopDisplayMediaStream: PropTypes.func,
+    startMergedStream: PropTypes.func,
+    stopMergedStream: PropTypes.func,
+    startPipStream: PropTypes.func,
+    stopPipStream: PropTypes.func,
     startRecording: PropTypes.func,
     stopRecording: PropTypes.func,
-    startStreaming: PropTypes.func,
-    stopStreaming: PropTypes.func,
   }
 
   constructor(props) {
@@ -55,9 +58,11 @@ class AVTrack extends Component {
     this.handleAudioDeviceChange = this.handleAudioDeviceChange.bind(this);
     this.handleDataAvailable = this.handleDataAvailable.bind(this);
     this.handleVideoDeviceChange = this.handleVideoDeviceChange.bind(this);
-    this.startDisplayMediaStreams = this.startDisplayMediaStreams.bind(this);
-    this.stopDisplayMediaStreams = this.stopDisplayMediaStreams.bind(this);
+    this.startDisplayMediaStream = this.startDisplayMediaStream.bind(this);
+    this.stopDisplayMediaStream = this.stopDisplayMediaStream.bind(this);
     this.startAVStreams = this.startAVStreams.bind(this);
+    this.startMergedStream = this.startMergedStream.bind(this);
+    this.stopMergedStream = this.stopMergedStream.bind(this);
     this.startPipStreams = this.startPipStreams.bind(this);
     this.startRecording = this.startRecording.bind(this);
     this.stopAVStreams = this.stopAVStreams.bind(this);
@@ -104,7 +109,7 @@ class AVTrack extends Component {
     }
   };
 
-  startDisplayMediaStreams = async () => {
+  startDisplayMediaStream = async () => {
     try {
       //https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getDisplayMedia
       const displayMediaOptions = {
@@ -125,13 +130,13 @@ class AVTrack extends Component {
             this.displayMediaRef.current.srcObject = stream;
             this.props.setSelectedDeviceTracks(stream.getTracks());
           });
-      this.props.startStreamingDisplayMedia();
+      this.props.startDisplayMediaStream();
     } catch (error) {
       console.error('Error accessing AV streams:', error);
     }
   }
 
-  stopDisplayMediaStreams = () => {
+  stopDisplayMediaStream = () => {
     if (this.displayMediaRef.current && this.displayMediaRef.current.srcObject) {
       try {
         this.displayMediaRef.current.srcObject.getTracks()
@@ -144,8 +149,63 @@ class AVTrack extends Component {
         console.error('Error stopping AV streams:', error);
       }
     }
-    this.props.stopStreamingDisplayMedia();
+    this.props.stopDisplayMediaStream();
   };
+
+  startMergedStream = () => {
+    // Places the display media stream into StageView canvas
+    // display media stream is scaled to fit the entire StageView canvas
+    // Places the AV stream in the lower right corner of the StageView canvas
+    // AV stream is scaled to fit the lower right corner of the StageView canvas
+
+    const canvas = document.getElementsByClassName("StageView")[0];
+    const ctx = canvas.getContext('2d');
+
+    // Set canvas dimensions to match the stage view
+    canvas.width = this.props.stageWidth || 1280;  // Default width if not provided
+    canvas.height = this.props.stageHeight || 720;  // Default height if not provided
+
+    const drawStreams = () => {
+      // Draw display media stream to fill entire canvas
+      if (this.props.displayMediaStream) {
+        ctx.drawImage(this.props.displayMediaStream, 0, 0, canvas.width, canvas.height);
+      }
+
+      // Draw AV stream in lower right corner (using 1/4 of the canvas size)
+      if (this.props.avStream) {
+        const cornerWidth = canvas.width / 4;
+        const cornerHeight = canvas.height / 4;
+        const xPosition = canvas.width - cornerWidth - 20; // 20px padding from right
+        const yPosition = canvas.height - cornerHeight - 20; // 20px padding from bottom
+
+        ctx.drawImage(
+            this.props.avStream,
+            xPosition,
+            yPosition,
+            cornerWidth,
+            cornerHeight
+        );
+      }
+
+      // Request next animation frame
+      requestAnimationFrame(drawStreams);
+    };
+
+    // Start the animation loop
+    drawStreams();
+
+    // Create a stream from the canvas
+    this.canvasStageRef.current.srcObject = canvas.captureStream(30); // 30 FPS
+
+    // Call the parent component's callback with the merged stream
+    this.props.startMergedStream();
+  };
+
+  
+  stopMergedStream = () => {
+
+    this.props.stopMergedStream();
+  }
 
   startRecording = () => {
     this.recordedChunks = [];
@@ -235,7 +295,7 @@ class AVTrack extends Component {
             this.videoRef.current.srcObject = stream;
             this.props.setSelectedDeviceTracks(stream.getTracks());
           });
-      this.props.startStreaming();
+      this.props.startAVStream();
     } catch (error) {
       console.error('Error accessing AV streams:', error);
     }
@@ -249,7 +309,7 @@ class AVTrack extends Component {
         console.error('Error stopping AV streams:', error);
       }
     }
-    this.props.stopStreaming();
+    this.props.stopAVStream();
   };
 
   startPipStreams = async () => {
@@ -266,7 +326,7 @@ class AVTrack extends Component {
               }
             }
           });
-      this.props.startStreamingPip();
+      this.props.startPipStream();
     } catch (error) {
       console.error('Error accessing Pip streams:', error);
     }
@@ -280,7 +340,7 @@ class AVTrack extends Component {
           console.error('Error stopping Pip:', error);
         });
     this.clearTracksFromVideoRef(this.videoPipRef);
-    this.props.stopStreamingPip();
+    this.props.stopPipStream();
   }
 
   handleAudioDeviceChange = (event) => {
@@ -306,7 +366,7 @@ class AVTrack extends Component {
             <td className="DisplayMediaCell"><DisplayMediaViewer
                 displayMediaRef={this.displayMediaRef}/></td>
             <td className="AudioCell"><AudioVisualizer
-                enableVisualizer={this.props.streaming || this.props.streamingDisplayMedia}
+                enableVisualizer={this.props.streamingAV || this.props.streamingDisplayMedia}
                 audioDevices={this.props.devices.filter(device => device.kind === 'audioinput')}
                 selectedAudioTracks={this.props.selectedDeviceTracks.filter(device => device.kind === 'audio')}
                 handleAudioDeviceChange={this.handleAudioDeviceChange}
@@ -318,14 +378,15 @@ class AVTrack extends Component {
                 <video ref={this.videoPipRef} className="displayNone" autoPlay></video>
                 <Button
                     variant="primary"
-                    onClick={this.startDisplayMediaStreams}
-                    className={this.props.streaming
+                    onClick={this.startDisplayMediaStream}
+                    className={this.props.streamingDisplayMedia
                     || this.state.selectedAudioDeviceId === ''
+                    || this.props.recording
                         ? 'displayNone' : ''}><FaPlay/> Start Display Streams
                 </Button>
                 <Button
                     variant="warning"
-                    onClick={this.stopDisplayMediaStreams}
+                    onClick={this.stopDisplayMediaStream}
                     className={!this.props.streamingDisplayMedia
                     || this.props.recording
                         ? 'displayNone' : ''}><FaSquare/> Stop Display Streams
@@ -333,21 +394,24 @@ class AVTrack extends Component {
                 <Button
                     variant="primary"
                     onClick={this.startAVStreams}
-                    className={this.props.streaming
+                    className={this.props.streamingAV
                     || (this.state.selectedVideoDeviceId === '' && this.state.selectedAudioDeviceId === '')
+                    || this.props.recording
                         ? 'displayNone' : ''}><FaPlay/> Start AV Streams
                 </Button>
                 <Button
                     variant="warning"
                     onClick={this.stopAVStreams}
-                    className={!this.props.streaming
+                    className={!this.props.streamingAV
                     || this.props.recording
                         ? 'displayNone' : ''}><FaSquare/> Stop AV Streams
                 </Button>
                 <Button
                     variant="primary"
                     onClick={this.startPipStreams}
-                    className={!this.props.streamingDisplayMedia || this.props.streamingPip
+                    className={!this.props.streamingDisplayMedia
+                    || this.props.streamingAV
+                    || this.props.streamingPip
                         ? 'displayNone' : ''}><FaPlay/> Start Picture-in-Picture
                 </Button>
                 <Button
@@ -357,9 +421,25 @@ class AVTrack extends Component {
                         ? 'displayNone' : ''}><FaSquare/> Stop Picture-in-Picture
                 </Button>
                 <Button
+                    variant="primary"
+                    onClick={this.startMergedStream}
+                    className={!this.props.streamingAV
+                    || !this.props.streamingDisplayMedia
+                    || this.props.streamingStage
+                    || this.props.recording
+                        ? 'displayNone' : ''}><FaPlay/> Start Merge
+                </Button>
+                <Button
+                    variant="warning"
+                    onClick={this.stopMergedStream}
+                    className={!this.props.streamingStage
+                    || this.props.recording
+                        ? 'displayNone' : ''}><FaSquare/> Stop Merge
+                </Button>
+                <Button
                     variant="danger"
                     onClick={this.startRecording}
-                    className={(!this.props.streaming && !this.props.streamingDisplayMedia)
+                    className={(!this.props.streamingAV && !this.props.streamingDisplayMedia)
                     || this.props.recording
                         ? 'displayNone' : ''}><FaCircle/> Start Recording
                 </Button>
