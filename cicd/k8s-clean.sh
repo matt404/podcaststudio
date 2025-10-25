@@ -1,5 +1,3 @@
 ssh ubuntu@app1.domo "microk8s.kubectl delete deployment podcaststudio-deployment"
 ssh ubuntu@app1.domo "microk8s.kubectl delete ingress podcaststudio-ingress"
 ssh ubuntu@app1.domo "microk8s.kubectl delete svc podcaststudio"
-ssh ubuntu@app1.domo "microk8s.kubectl delete svc podcaststudio-nodeport"
-ssh ubuntu@app1.domo "microk8s.kubectl delete secret podcaststudio-tls"
