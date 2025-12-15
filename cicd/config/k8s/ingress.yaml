@@ -9,8 +9,8 @@ metadata:
 spec:
   tls:
     - hosts:
-        - podcaststudio.phx.domo
-      secretName: podcaststudio-tls
+        - podcaststudio.app.phx.domo
+      secretName: star-app-tls
   rules:
     - host: podcaststudio.phx.domo
       http:
